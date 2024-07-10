@@ -6,7 +6,7 @@
     <div style="margin-top: 2rem; width: 40%; height: 0; padding-bottom: 40%;">
         <img src="./assets/校徽.png" alt="校徽" style="width: 60%; display: block; margin: 0 auto;"/>
 	</div>
-    <p style="font-size: 24pt; margin-top: 2rem;">点餐系统&emsp;&emsp;</p>
+    <p style="font-size: 24pt; margin-top: 2rem;">家教管理系统&emsp;&emsp;</p>
     <p style="font-size: 24pt; margin-top: 1rem;">&emsp;&emsp;</p>
     <table style="border:none; width: 80%; font-family: '仿宋'; margin-top: 2rem;">
     <tbody style="font-size: 16pt;">
@@ -18,12 +18,12 @@
         <tr style="font-weight:bold;"> 
     		<td style="width: 25%; text-align:right;">姓&emsp;&emsp;名</td>
     		<td style="width: 5%;">：</td> 
-    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;"></td>     
+    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;">林正阳 刘灿 于瑞东 安竟豪 武敬信 宦然</td>     
 		</tr>
     	<tr style="font-weight:bold;"> 
     		<td style="width: 25%; text-align:right;">学&emsp;&emsp;号</td>
     		<td style="width: 5%;">：</td> 
-    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;"></td>     
+    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;">202100800570 202100800571 202100800646 202100800521 202000800525 202100800550</td>     
 		</tr>
         <tr style="font-weight:bold;"> 
     		<td style="width: 25%; text-align:right;">专业班级</td>
@@ -33,9 +33,10 @@
     	<tr style="font-weight:bold;"> 
     		<td style="width: 25%; text-align:right;">授课教师</td>
     		<td style="width: 5%;">：</td> 
-    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;"></td>     
+    		<td style="font-weight:normal; border-bottom: 2px solid; text-align:center;">张亚峰</td>     
 		</tr>
     </tbody>              
     </table>
     <p style="margin-top: 2rem;">2024 年 7 月 8 日</p>
 </div>
+
