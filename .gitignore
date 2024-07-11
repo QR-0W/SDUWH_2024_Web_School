@@ -1,0 +1,8 @@
+
+.idea/
+
+my-log/springboot-demo.log
+
+server/src/main/resources/application.yml
+
+web/src/store/constants.ts
