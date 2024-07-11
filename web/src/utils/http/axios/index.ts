@@ -1,10 +1,7 @@
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { showMessage } from './status';
 import { IResponse } from './type';
-import { getToken } from '/@/utils/auth';
-import { TokenPrefix } from '/@/utils/auth';
-import {ADMIN_USER_TOKEN, USER_TOKEN, BASE_URL} from '/@/store/constants'
+import { ADMIN_USER_TOKEN, BASE_URL, USER_TOKEN } from '/@/store/constants';
 
 const service: AxiosInstance = axios.create({
   // baseURL: import.meta.env.BASE_URL + '',
@@ -15,9 +12,8 @@ const service: AxiosInstance = axios.create({
 // axios实例拦截请求
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-
-    config.headers.ADMINTOKEN = localStorage.getItem(ADMIN_USER_TOKEN)
-    config.headers.TOKEN = localStorage.getItem(USER_TOKEN)
+    config.headers.ADMINTOKEN = localStorage.getItem(ADMIN_USER_TOKEN);
+    config.headers.TOKEN = localStorage.getItem(USER_TOKEN);
 
     return config;
   },
@@ -29,39 +25,40 @@ service.interceptors.request.use(
 // axios实例拦截响应
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    if(response.status == 200) {
-      if(response.data.code == 0 || response.data.code == 200) {
-        return response
-      }else {
-        return Promise.reject(response.data)
+    if (response.status == 200) {
+      if (response.data.code == 0 || response.data.code == 200) {
+        return response;
+      } else {
+        return Promise.reject(response.data);
       }
     } else {
-      return Promise.reject(response.data)
+      return Promise.reject(response.data);
     }
   },
   // 请求失败
   (error: any) => {
-    console.log(error.response.status)
-    if(error.response.status == 404) {
+    console.log(error.response.status);
+    if (error.response.status == 404) {
       // todo
-    } else if(error.response.status == 403) {
+    } else if (error.response.status == 403) {
       // todo
     }
-    return Promise.reject(error)
+    return Promise.reject(error);
   },
 );
-
-
 
 const request = <T = any>(config: AxiosRequestConfig): Promise<T> => {
   const conf = config;
   return new Promise((resolve, reject) => {
-    service.request<any, AxiosResponse<IResponse>>(conf).then((res: AxiosResponse<IResponse>) => {
-      const data = res.data
-      resolve(data as T);
-    }).catch(err => {
-      reject(err)
-    });
+    service
+      .request<any, AxiosResponse<IResponse>>(conf)
+      .then((res: AxiosResponse<IResponse>) => {
+        const data = res.data;
+        resolve(data as T);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
