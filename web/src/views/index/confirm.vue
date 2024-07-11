@@ -1,56 +1,81 @@
 <template>
   <div>
+    <!-- 页面头部 -->
     <Header />
+
+    <!-- 购物车页面主体 -->
     <section class="cart-page flex-view">
       <div class="left-flex">
+        <!-- 订单明细标题 -->
         <div class="title flex-view">
           <h3>订单明细</h3>
         </div>
+
+        <!-- 购物车商品列表 -->
         <div class="cart-list-view">
+          <!-- 商品列表标题栏 -->
           <div class="list-th flex-view">
             <span class="line-1">商品名称</span>
             <span class="line-2">价格</span>
             <span class="line-5">数量</span>
             <span class="line-6">操作</span>
           </div>
+
+          <!-- 商品列表内容 -->
           <div class="list">
             <div class="items flex-view">
               <div class="book flex-view">
+                <!-- 商品封面图和标题 -->
                 <img :src="pageData.cover" />
                 <h2>{{ pageData.title }}</h2>
               </div>
+              <!-- 商品价格 -->
               <div class="pay">¥{{ pageData.price }}</div>
+              <!-- 商品数量选择 -->
               <a-input-number v-model:value="pageData.count" :min="1" :max="10" @change="onCountChange" />
+              <!-- 删除商品按钮 -->
               <img :src="DeleteIcon" class="delete" />
             </div>
           </div>
         </div>
+
+        <!-- 备注标题 -->
         <div class="title flex-view">
           <h3>备注</h3>
         </div>
+        <!-- 备注输入框 -->
         <textarea v-model="pageData.remark" placeholder="输入备注信息，100字以内" class="remark"> </textarea>
       </div>
+
+      <!-- 右侧区域 -->
       <div class="right-flex">
+        <!-- 收货地址标题 -->
         <div class="title flex-view">
           <h3>收货地址</h3>
         </div>
+
+        <!-- 收货地址展示区域 -->
         <div class="address-view">
           <div class="info" style="">
             <span>收件人：</span>
             <span class="name">{{ pageData.receiverName }} </span>
             <span class="tel">{{ pageData.receiverPhone }} </span>
           </div>
+          <!-- 如果有收货地址则显示地址信息，否则显示添加地址提示 -->
           <div class="address" v-if="pageData.receiverAddress"> {{ pageData.receiverAddress }}</div>
           <div class="info" v-else>
             <span>目前暂无地址信息，请</span>
             <span class="info-blue" @click="handleAdd">新建地址</span>
           </div>
         </div>
+
+        <!-- 结算标题和价格展示 -->
         <div class="title flex-view">
           <h3>结算</h3>
           <span class="click-txt">价格</span>
         </div>
         <div class="price-view">
+          <!-- 商品总价等详细价格信息 -->
           <div class="price-item flex-view">
             <div class="item-name">商品总价</div>
             <div class="price-txt">¥{{ pageData.amount }}</div>
@@ -63,12 +88,14 @@
             <div class="item-name">商品折扣</div>
             <div class="price-txt">¥0</div>
           </div>
+          <!-- 合计价格 -->
           <div class="total-price-view flex-view">
             <span>合计</span>
             <div class="price">
               <span class="font-big">¥{{ pageData.amount }}</span>
             </div>
           </div>
+          <!-- 返回和结算按钮 -->
           <div class="btns-view">
             <button class="btn buy" @click="handleBack()">返回</button>
             <button class="btn pay jiesuan" @click="handleJiesuan()">结算</button>
@@ -77,7 +104,7 @@
       </div>
     </section>
 
-    <!--选择弹窗区域-->
+    <!-- 新建地址弹窗 -->
     <div>
       <a-modal
         :visible="modal.visile"
@@ -89,6 +116,7 @@
         @ok="handleOk"
       >
         <a-form ref="myform" :label-col="{ style: { width: '80px' } }" :model="modal.form" :rules="modal.rules">
+          <!-- 表单内容 -->
           <a-row :gutter="24">
             <a-col span="24">
               <a-form-item label="姓名" name="name">
@@ -136,6 +164,7 @@
   const route = useRoute();
   const userStore = useUserStore();
 
+  // 响应式数据
   const pageData = reactive({
     id: undefined,
     title: undefined,
@@ -149,7 +178,7 @@
     receiverAddress: undefined,
   });
 
-  // 弹窗数据
+  // 弹窗相关数据
   const modal = reactive({
     visile: false,
     editFlag: false,
@@ -167,6 +196,7 @@
 
   const myform = ref();
 
+  // 组件挂载后的操作
   onMounted(() => {
     pageData.id = route.query.id;
     pageData.title = route.query.title;
@@ -177,17 +207,19 @@
     listAddressData();
   });
 
+  // 新建地址操作
   const handleAdd = () => {
     resetModal();
     modal.visile = true;
     modal.editFlag = false;
     modal.title = '新增';
-    // 重置
+    // 重置表单
     for (const key in modal.form) {
       modal.form[key] = undefined;
     }
   };
 
+  // 确认新建地址
   const handleOk = () => {
     if (!userStore.user_id) {
       message.warn('请先登录');
@@ -208,10 +240,12 @@
         if (modal.form.desc) {
           formData.append('description', modal.form.desc);
         }
+        // 创建地址请求
         createAddressApi(formData)
           .then((res) => {
             console.log(res);
             hideModal();
+            // 更新页面地址信息
             pageData.receiverName = modal.form.name;
             pageData.receiverAddress = modal.form.desc;
             pageData.receiverPhone = modal.form.mobile;
@@ -222,17 +256,12 @@
       })
       .catch((err) => {
         console.log(err);
-        console.log('不能为空');
       });
   };
 
+  // 取消操作
   const handleCancel = () => {
     hideModal();
-  };
-
-  // 恢复表单初始状态
-  const resetModal = () => {
-    myform.value?.resetFields();
   };
 
   // 关闭弹窗
@@ -240,347 +269,265 @@
     modal.visile = false;
   };
 
-  const onCountChange = (value) => {
-    pageData.amount = pageData.price * value;
+  // 清空弹窗内容
+  const resetModal = () => {
+    modal.form.name = undefined;
+    modal.form.mobile = undefined;
+    modal.form.desc = undefined;
+    modal.form.default = false;
   };
 
-  const listAddressData = () => {
-    let userId = userStore.user_id;
-    listAddressListApi({ userId: userId })
+  // 返回按钮操作
+  const handleBack = () => {
+    router.go(-1);
+  };
+
+  // 结算按钮操作
+  const handleJiesuan = () => {
+    const cartData = new FormData();
+    cartData.append('orderId', pageData.id);
+    cartData.append('count', pageData.count.toString());
+    cartData.append('amount', pageData.amount.toString());
+    cartData.append('remark', pageData.remark || '');
+
+    createApi(cartData)
       .then((res) => {
-        if (res.data.length > 0) {
-          pageData.receiverName = res.data[0].name;
-          pageData.receiverPhone = res.data[0].mobile;
-          pageData.receiverAddress = res.data[0].description;
-          res.data.forEach((item) => {
-            if (item.default) {
-              pageData.receiverName = item.name;
-              pageData.receiverPhone = item.mobile;
-              pageData.receiverAddress = item.description;
-            }
-          });
-        }
+        console.log(res);
+        message.success('提交成功');
+        router.push('/order');
       })
       .catch((err) => {
-        console.log(err);
+        message.error(err.msg || '提交失败');
       });
   };
 
-  const handleBack = () => {
-    router.back();
-    console.log('back...');
+  // 商品数量改变操作
+  const onCountChange = (val) => {
+    pageData.count = val;
+    pageData.amount = pageData.price * val;
   };
-  const handleJiesuan = () => {
-    const formData = new FormData();
-    let userId = userStore.user_id;
-    if (!userId) {
-      message.warn('请先登录！');
-      return;
-    }
-    if (!pageData.receiverName) {
-      message.warn('请选择地址！');
-      return;
-    }
-    formData.append('userId', userId);
-    formData.append('thingId', pageData.id);
-    formData.append('count', pageData.count);
-    if (pageData.remark) {
-      formData.append('remark', pageData.remark);
-    }
-    formData.append('receiverName', pageData.receiverName);
-    formData.append('receiverPhone', pageData.receiverPhone);
-    formData.append('receiverAddress', pageData.receiverAddress);
-    console.log(formData);
-    createApi(formData)
+
+  // 获取地址列表
+  const listAddressData = () => {
+    listAddressListApi({ userId: userStore.user_id })
       .then((res) => {
-        message.success('请支付订单');
-        router.push({ name: 'pay', query: { amount: pageData.amount } });
+        if (res.data.length > 0) {
+          // 如果有默认地址，设置默认地址
+          for (const item of res.data) {
+            if (item.def === '1') {
+              pageData.receiverName = item.name;
+              pageData.receiverPhone = item.mobile;
+              pageData.receiverAddress = item.description;
+              break;
+            }
+          }
+        }
       })
       .catch((err) => {
-        message.error(err.msg || '失败');
+        console.error(err);
       });
   };
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
   .flex-view {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .cart-page {
-    width: 1024px;
-    min-height: 50vh;
-    margin: 100px auto;
-  }
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 
-  .left-flex {
-    -webkit-box-flex: 17;
-    -ms-flex: 17;
-    flex: 17;
-    padding-right: 20px;
-  }
+    .left-flex {
+      flex: 2;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-right: 20px;
 
-  .title {
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+      .title {
+        margin-bottom: 20px;
+        h3 {
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+      }
 
-    h3 {
-      color: #152844;
-      font-weight: 600;
-      font-size: 18px;
-      height: 26px;
-      line-height: 26px;
-      margin: 0;
+      .cart-list-view {
+        .list-th {
+          background-color: #f0f0f0;
+          padding: 10px 0;
+          font-weight: bold;
+          .line-1 {
+            width: 400px;
+          }
+          .line-2 {
+            width: 200px;
+          }
+          .line-5 {
+            width: 200px;
+          }
+          .line-6 {
+            width: 200px;
+          }
+        }
+        .list {
+          .items {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+            .book {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              img {
+                width: 80px;
+                height: 80px;
+                margin-right: 10px;
+              }
+              h2 {
+                font-size: 16px;
+              }
+            }
+            .pay {
+              width: 100px;
+            }
+            .delete {
+              width: 20px;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .remark {
+        width: 100%;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        resize: none;
+      }
     }
-  }
 
-  .cart-list-view {
-    margin: 4px 0 40px;
-
-    .list-th {
-      height: 42px;
-      line-height: 42px;
-      border-bottom: 1px solid #cedce4;
-      color: #152844;
-      font-size: 14px;
-
-      .line-1 {
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        margin-right: 20px;
-      }
-
-      .line-2,
-      .pc-style .cart-list-view .list-th .line-3,
-      .pc-style .cart-list-view .list-th .line-4 {
-        width: 65px;
-        margin-right: 20px;
-      }
-
-      .line-5 {
-        width: 80px;
-        margin-right: 40px;
-      }
-
-      .line-6 {
-        width: 28px;
-      }
-    }
-  }
-
-  .items {
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    margin-top: 20px;
-
-    .book {
-      -webkit-box-flex: 1;
-      -ms-flex: 1;
+    .right-flex {
       flex: 1;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      margin-right: 20px;
-      cursor: pointer;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
 
-      img {
-        width: 48px;
-        margin-right: 16px;
-        border-radius: 4px;
+      .title {
+        margin-bottom: 20px;
+        h3 {
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
       }
 
-      h2 {
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        font-size: 14px;
-        line-height: 22px;
-        color: #152844;
+      .address-view {
+        .info {
+          margin-bottom: 10px;
+          .info-blue {
+            color: #1e90ff;
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+          .name,
+          .tel {
+            margin-right: 10px;
+          }
+        }
+        .address {
+          margin-bottom: 10px;
+          font-size: 14px;
+        }
+      }
+
+      .price-view {
+        .price-item {
+          padding: 10px 0;
+          border-bottom: 1px solid #ddd;
+          .item-name {
+            flex: 1;
+            font-size: 16px;
+          }
+          .price-txt {
+            font-size: 16px;
+          }
+        }
+        .total-price-view {
+          margin-top: 20px;
+          .price {
+            margin-left: auto;
+            .font-big {
+              font-size: 24px;
+              font-weight: bold;
+              color: #ff0000;
+            }
+          }
+        }
+        .btns-view {
+          margin-top: 20px;
+          button {
+            width: 100px;
+            height: 40px;
+            margin-right: 10px;
+            cursor: pointer;
+            &.buy {
+              background-color: #f0f0f0;
+              color: #666;
+              border: none;
+              &:hover {
+                background-color: #e0e0e0;
+              }
+            }
+            &.jiesuan {
+              background-color: #ff0000;
+              color: #fff;
+              border: none;
+              &:hover {
+                background-color: #cc0000;
+              }
+            }
+          }
+        }
       }
     }
-
-    .type {
-      width: 65px;
-      margin-right: 20px;
-      color: #152844;
-      font-size: 14px;
-    }
-
-    .pay {
-      color: #ff8a00;
-      font-weight: 600;
-      font-size: 16px;
-      width: 65px;
-      margin-right: 20px;
-    }
-
-    .num-box {
-      width: 80px;
-      margin-right: 43px;
-      border-radius: 4px;
-      border: 1px solid #cedce4;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      height: 32px;
-      padding: 0 4px;
-    }
-
-    .delete {
-      margin-left: 36px;
-      width: 24px;
-      cursor: pointer;
-    }
   }
 
-  .mb-24 {
-    margin-bottom: 24px;
+  .ant-modal-body {
+    padding: 20px !important;
   }
 
-  .show-txt {
-    color: #ff8a00;
-    font-size: 14px;
-  }
-
-  .remark {
-    width: 100%;
-    background: #f6f9fb;
-    border: 0;
-    border-radius: 4px;
-    padding: 6px 12px;
-    //color: #152844;
-    margin-top: 16px;
-    resize: none;
-    height: 56px;
-    line-height: 22px;
-  }
-
-  .right-flex {
-    -webkit-box-flex: 8;
-    -ms-flex: 8;
-    flex: 8;
-    padding-left: 24px;
-    border-left: 1px solid #cedce4;
-  }
-
-  .click-txt {
-    color: #4684e2;
-    font-size: 14px;
+  .info-blue {
+    color: #1e90ff;
     cursor: pointer;
-  }
-
-  .address-view {
-    margin: 12px 0 24px;
-
-    .info {
-      color: #909090;
-      font-size: 14px;
-
-      .info-blue {
-        cursor: pointer;
-        color: #4684e2;
-      }
-    }
-
-    .name {
-      color: #152844;
-      font-weight: 500;
-    }
-
-    .tel {
-      color: #152844;
-      float: right;
-    }
-
-    .address {
-      color: #152844;
-      margin-top: 4px;
+    &:hover {
+      text-decoration: underline;
     }
   }
 
-  .price-view {
-    overflow: hidden;
-    margin-top: 16px;
-
-    .price-item {
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 14px;
-
-      .item-name {
-        color: #152844;
-      }
-
-      .price-txt {
-        font-weight: 500;
-        color: #ff8a00;
-      }
-    }
-
-    .total-price-view {
-      margin-top: 12px;
-      border-top: 1px solid #cedce4;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      -webkit-box-align: start;
-      -ms-flex-align: start;
-      align-items: flex-start;
-      padding-top: 10px;
-      color: #152844;
-      font-weight: 500;
-
-      .price {
-        color: #ff8a00;
-        font-size: 16px;
-        height: 36px;
-        line-height: 36px;
-      }
-    }
-
-    .btns-view {
-      margin-top: 24px;
-      text-align: right;
-
-      .buy {
-        background: #fff;
-        color: #4684e2;
-      }
-
-      .jiesuan {
-        cursor: pointer;
-        background: #4684e2;
-        color: #fff;
-      }
-
-      .btn {
-        cursor: pointer;
-        width: 96px;
-        height: 36px;
-        line-height: 33px;
-        margin-left: 16px;
-        text-align: center;
-        border-radius: 32px;
-        border: 1px solid #4684e2;
-        font-size: 16px;
-        outline: none;
-      }
+  .btn {
+    display: inline-block;
+    padding: 0 15px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    &:hover {
+      opacity: 0.8;
     }
   }
 </style>
