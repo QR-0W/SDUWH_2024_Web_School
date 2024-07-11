@@ -1,0 +1,81 @@
+server:
+  port: 9100  # 应用端口号
+  servlet:
+    context-path: /api  # 应用的上下文路径
+
+# 全局变量
+BASE_LOCATION: Java_Jiajiao  # 基础路径
+DB_NAME: java_jiajiao  # 数据库名称
+
+spring:
+  datasource:
+    username: root  # 数据库用户名
+    password: 123456  # 数据库密码
+    url: jdbc:mysql://localhost:3306/${DB_NAME}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC  # 数据库连接URL
+    driver-class-name: com.mysql.cj.jdbc.Driver  # 数据库驱动类名
+    type: com.alibaba.druid.pool.DruidDataSource  # 使用Druid数据源
+
+    druid:
+      # 连接池的配置信息
+      initial-size: 5  # 初始连接数
+      min-idle: 5  # 最小空闲连接数
+      maxActive: 20  # 最大连接数
+      maxWait: 60000  # 获取连接的最大等待时间
+      timeBetweenEvictionRunsMillis: 60000  # 间隔多久检测一次空闲连接的有效性
+      minEvictableIdleTimeMillis: 300000  # 连接池中连接可空闲的最小时间
+      validationQuery: SELECT 1  # 用于验证连接是否有效的SQL查询语句
+      testWhileIdle: true  # 空闲时检测连接是否有效
+      testOnBorrow: false  # 借出连接时不检测
+      testOnReturn: false  # 归还连接时不检测
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+      web-stat-filter:
+        enabled: true  # 启用Web监控统计过滤器
+        url-pattern: "/*"  # 监控的URL模式
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"  # 排除的URL
+
+      stat-view-servlet:
+        # IP白名单(没有配置或者为空，则允许所有访问)
+        allow: 127.0.0.1
+        # IP黑名单 (存在共同时，deny优先于allow)
+        deny: 192.168.1.73
+        # 禁用HTML页面上的“Reset All”功能
+        reset-enable: false
+        # druid登录的账户名
+        login-username: admin
+        # druid登录的密码
+        login-password: 123
+        # 不要写2个*号！要1个！
+        url-pattern: "/druid/*"
+        # 这里配true才能访问监控页面！
+        enabled: true
+
+  servlet:
+    multipart:
+      max-request-size: 10MB  # 最大上传请求大小，默认10MB
+      max-file-size: 1MB  # 单个文件最大大小，默认1MB
+      location: ${BASE_LOCATION}\server\upload\tmp  # 上传文件临时存储位置
+      enabled: true  # 启用文件上传功能
+
+  mvc:
+    static-path-pattern: /staticfiles/**  # 静态资源访问路径
+
+  web:
+    resources:
+      #      static-locations: classpath:/static
+      static-locations: file:${BASE_LOCATION}\server\upload  # 静态资源文件路径
+
+# 文件上传路径配置
+File:
+  uploadPath: ${BASE_LOCATION}\server\upload
+
+# MyBatis配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true  # 将数据库字段映射到Java属性时，采用驼峰命名规则
