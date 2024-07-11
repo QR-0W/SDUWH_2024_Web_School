@@ -1,3 +1,8 @@
+/**
+ * 根据状态码返回对应的错误信息提示
+ * @param status 状态码，可以是数字或字符串类型
+ * @returns 错误信息字符串
+ */
 export const showMessage = (status: number | string): string => {
   let message = '';
   switch (status) {
@@ -35,7 +40,7 @@ export const showMessage = (status: number | string): string => {
       message = 'HTTP版本不受支持(505)';
       break;
     default:
-      message = `连接出错(${status})!`;
+      message = `连接出错(${status})!`; // 处理未定义状态码
   }
-  return `${message}，请检查网络或联系管理员！`;
+  return `${message}，请检查网络或联系管理员！`; // 返回拼接好的错误信息字符串
 };
