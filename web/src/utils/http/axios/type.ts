@@ -1,20 +1,26 @@
+/**
+ * 请求选项接口
+ */
 export interface RequestOptions {
-  // Whether to process the request result
+  // 是否处理请求结果
   isTransformResponse?: boolean;
 }
 
-// 返回res.data的interface
+/**
+ * 接口响应数据的通用结构
+ * @template T 响应数据的类型，默认为 any
+ */
 export interface IResponse<T = any> {
-  code: number | string;
-  result: T;
-  message: string;
-  status: string | number;
+  code: number | string; // 响应状态码，可以是数字或字符串类型
+  result: T; // 响应数据的具体内容
+  message: string; // 响应消息，描述请求结果
+  status: string | number; // 响应状态，可以是字符串或数字类型
 }
 
-/**用户登录 */
+/**
+ * 用户登录接口
+ */
 export interface ILogin {
-  /** 账户名称 */
-  username: string;
-  /** 账户密码 */
-  password: string;
+  username: string; // 账户名称
+  password: string; // 账户密码
 }
