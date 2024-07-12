@@ -1,16 +1,16 @@
 server:
-  port: 9100  # 应用端口号
+  port: 8091  # 应用端口号 记得要修改
   servlet:
     context-path: /api  # 应用的上下文路径
 
 # 全局变量
-BASE_LOCATION: D:\Study\Web_School # 基础路径
-DB_NAME: java_jiajiao  # 数据库名称
+BASE_LOCATION: D:\mango # 基础路径 修改为自己的路径
+DB_NAME: java_jiajiao  # 数据库名称 修改为自己的数据库名称
 
 spring:
   datasource:
-    username: root  # 数据库用户名
-    password: 123456  # 数据库密码
+    username: root  # 数据库用户名 修改为自己的数据库用户名
+    password: Yrd20030228  # 数据库密码 修改为自己的数据库密码
     url: jdbc:mysql://localhost:3306/${DB_NAME}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC  # 数据库连接URL
     driver-class-name: com.mysql.cj.jdbc.Driver  # 数据库驱动类名
     type: com.alibaba.druid.pool.DruidDataSource  # 使用Druid数据源
