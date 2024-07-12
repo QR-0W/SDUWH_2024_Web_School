@@ -4,7 +4,7 @@ server:
     context-path: /api  # 应用的上下文路径
 
 # 全局变量
-BASE_LOCATION: Java_Jiajiao  # 基础路径
+BASE_LOCATION: D:\Study\Web_School # 基础路径
 DB_NAME: java_jiajiao  # 数据库名称
 
 spring:
