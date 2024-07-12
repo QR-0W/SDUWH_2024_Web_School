@@ -38,7 +38,7 @@
       // 打开关于我们页面的方法
       openContactPage() {
         // 在这里设置打开网页的逻辑，例如：
-        window.open('../src/assets/contactPage.html', '_blank');
+        window.open('../src/assets/MainPage.html', '_blank');
       },
     },
   };
