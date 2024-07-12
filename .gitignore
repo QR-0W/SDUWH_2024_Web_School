@@ -1,0 +1,2 @@
+# Ignore the application.yml file
+src/main/resources/application.yml
