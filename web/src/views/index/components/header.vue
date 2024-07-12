@@ -1,24 +1,37 @@
 <template>
+  <!-- 主导航栏视图 -->
   <div class="main-bar-view">
+    <!-- 网站logo部分 -->
     <div class="logo">
+      <!-- logo图片，点击跳转到主页 -->
       <img :src="logoImage" class="search-icon" @click="$router.push({ name: 'portal' })" />
     </div>
+    <!-- 搜索输入区域 -->
     <div class="search-entry">
+      <!-- 搜索图标 -->
       <img :src="SearchIcon" class="search-icon" />
+      <!-- 搜索输入框，按回车触发搜索方法 -->
       <input placeholder="输入关键词" ref="keywordRef" @keyup.enter="search" />
     </div>
+    <!-- 右侧操作区域 -->
     <div class="right-view">
+      <!-- 家教入驻按钮，非用户角色5时显示 -->
       <a-button v-if="userStore.user_role != '5'" type="link" @click="handleJoin()">家教入驻</a-button>
+      <!-- 用户登录后显示的部分 -->
       <template v-if="userStore.user_token">
         <a-dropdown>
           <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+            <!-- 用户头像 -->
             <img :src="AvatarIcon" class="self-img" />
           </a>
+          <!-- 下拉菜单 -->
           <template #overlay>
             <a-menu>
+              <!-- 个人中心 -->
               <a-menu-item>
                 <a @click="goUserCenter()">个人中心</a>
               </a-menu-item>
+              <!-- 退出登录 -->
               <a-menu-item>
                 <a @click="quit()">退出</a>
               </a-menu-item>
@@ -26,22 +39,25 @@
           </template>
         </a-dropdown>
       </template>
+      <!-- 用户未登录时显示的登录按钮 -->
       <template v-else>
         <button class="login btn hidden-sm" @click="goLogin()">登录</button>
       </template>
 
+      <!-- 消息图标，点击打开消息抽屉 -->
       <div v-if="userStore.user_token" class="right-icon" @click="msgVisible = true">
         <img :src="MessageIcon" />
         <span class="msg-point" style=""></span>
       </div>
+      <!-- 消息抽屉 -->
       <div v-if="userStore.user_token">
         <a-drawer title="我的消息" placement="right" :closable="true" :maskClosable="true" :visible="msgVisible" @close="onClose">
           <a-spin :spinning="loading" style="min-height: 200px">
             <div class="list-content">
               <div class="notification-view">
                 <div class="list">
+                  <!-- 消息列表 -->
                   <div class="notification-item flex-view" v-for="item in msgData">
-                    <!---->
                     <div class="content-box">
                       <div class="header">
                         <span class="title-txt">{{ item.title }}</span>
@@ -73,20 +89,21 @@
   import MessageIcon from '/@/assets/images/message-icon.svg';
   import { message } from 'ant-design-vue';
 
-  const router = useRouter();
-  const route = useRoute();
-  const userStore = useUserStore();
+  const router = useRouter(); // 使用路由实例
+  const route = useRoute(); // 使用当前路由信息
+  const userStore = useUserStore(); // 使用用户状态管理
 
-  const keywordRef = ref();
+  const keywordRef = ref(); // 搜索关键词引用
 
-  let loading = ref(false);
-  let msgVisible = ref(false);
-  let msgData = ref([] as any);
+  let loading = ref(false); // 加载状态
+  let msgVisible = ref(false); // 消息抽屉可见状态
+  let msgData = ref([] as any); // 消息数据
 
   onMounted(() => {
-    getMessageList();
+    getMessageList(); // 组件挂载时获取消息列表
   });
 
+  // 获取消息列表的方法
   const getMessageList = () => {
     loading.value = true;
     listApi({})
@@ -99,6 +116,8 @@
         loading.value = false;
       });
   };
+
+  // 搜索方法
   const search = () => {
     const keyword = keywordRef.value.value;
     if (route.name === 'search') {
@@ -108,10 +127,13 @@
       window.open(text.href, '_blank');
     }
   };
+
+  // 跳转到登录页面
   const goLogin = () => {
     router.push({ name: 'login' });
   };
 
+  // 跳转到用户中心页面
   const goUserCenter = () => {
     console.log(userStore.user_role);
     if (userStore.user_role === '1' || userStore.user_role === '2') {
@@ -120,14 +142,20 @@
       router.push({ name: 'jiajiaoOrderView' });
     }
   };
+
+  // 退出登录方法
   const quit = () => {
     userStore.logout().then((res) => {
       router.push({ name: 'portal' });
     });
   };
+
+  // 关闭消息抽屉
   const onClose = () => {
     msgVisible.value = false;
   };
+
+  // 处理家教入驻方法
   const handleJoin = () => {
     let userId = userStore.user_id;
     if (userId) {
