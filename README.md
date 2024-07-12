@@ -31,24 +31,23 @@
 <br />
 
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">
+    <img src="./assets/校徽.png" alt="Logo" width="80" height="80">
   </a>
 
-
-<h3 align="center">项目标题</h3>
+<h3 align="center">家教系统</h3>
 
   <p align="center">
     项目简介
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>浏览文档 »</strong></a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School"><strong>浏览文档 »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">查看 Demo</a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">查看 Demo</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">反馈 Bug</a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/issues">反馈 Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">请求新功能</a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/issues">请求新功能</a>
   </p>
 
 </div>
@@ -99,14 +98,8 @@
 
 ### 构建工具
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
 * [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
 * [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
 
 <p align="right">(<a href="#top">回到顶部</a>)</p>
 
@@ -240,15 +233,15 @@ _转到 [文档](https://example.com) 查看更多示例_
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[contributors-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
+[forks-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/network/members
 [stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
+[stars-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/stargazers
 [issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
+[issues-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/issues
 [license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[license-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
@@ -265,16 +258,3 @@ _转到 [文档](https://example.com) 查看更多示例_
 
 
 
-#### 			团队分工：
-
-​							**林正阳：**类图设计文档、标签管理、评论管理、答辩材料
-
-​							**宦然：**类图设计文档、分类管理、答辩材料
-
-​							**刘灿：**类图设计文档、用户管理、运营管理、答辩材料
-
-​							**于瑞东：**类图设计文档、家教管理、答辩材料
-
-​							**武敬信：**需求分析报告、家教入驻、用户中心模块、答辩材料
-
-​							**安竟豪：**数据库设计文档、首页、家教详情、答辩材料
