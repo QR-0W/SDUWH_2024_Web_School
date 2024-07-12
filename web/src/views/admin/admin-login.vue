@@ -141,7 +141,7 @@ const loginSuccess = () => {
   .main-container {
     width: 100%;
     height: calc(100vh - 160px);
-    background-image: url('../images/admin-login-bg.jpg');
+    background-image: url('../../assets/images/117201993_p1.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

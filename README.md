@@ -37,7 +37,7 @@
 <h3 align="center">家教系统</h3>
 
   <p align="center">
-    本项目为家教信息管理平台，提供家教选择，信息管理等功能
+    本项目为家教信息管理平台，提供家教选择，信息管理等功能。
     <br />
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School"><strong>浏览文档 »</strong></a>
     <br />
@@ -48,6 +48,7 @@
     ·
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/issues">请求新功能</a>
   </p>
+
 
 </div>
 
@@ -88,7 +89,7 @@
 
 本项目为家教信息管理平台，提供家教选择，信息管理等功能。
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
@@ -97,7 +98,22 @@
 * [Vue.js](https://vuejs.org/)
 * [Bootstrap](https://getbootstrap.com)
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
+
+### 			团队分工：​							
+
+林正阳：类图设计文档、标签管理、评论管理、答辩材料​		
+
+宦然：类图设计文档、分类管理、答辩材料​							
+
+刘灿：类图设计文档、用户管理、运营管理、答辩材料​			
+
+于瑞东：类图设计文档、家教管理、答辩材料​							
+
+武敬信：需求分析报告、主页面、搜索界面、详细界面、用户中心、答辩材料
+
+安竟豪：数据库设计文档、后端管理全部界面、登录界面、注册界面、答辩材料
+
 
 
 
@@ -119,7 +135,7 @@
 
 （等待补全）
 
-<p align="right">(<a href="#top">返回顶部</a>)</p>
+
 
 
 
@@ -129,7 +145,7 @@
 
 （等待补全）
 
-<p align="right">(<a href="#top">返回顶部</a>)</p>
+
 
 
 
@@ -137,15 +153,15 @@
 
 ## 路线图
 
-- [ ] 数据库创建
-- [ ] 后端创建 Service - Controller - Mapper 
-- [ ] 后端开放接口
-- [ ] 前端绘制
-- [ ] （待补充）
+- [x] 数据库创建
+- [x] 后端创建 Service - Controller - Mapper 
+- [x] 后端开放前端接口
+- [x] 前端 Ant design 创建界面
+- [ ] 邮箱验证码功能
 
 到 [open issues](https://github.com/QR-0W/SDUWH_2024_Web_School/issues) 页查看所有请求的功能 （以及已知的问题）。
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
@@ -163,7 +179,7 @@
 4. 推送到该分支 (`git push origin feature/AmazingFeature`)
 5. 创建一个拉取请求（Pull Request）
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
@@ -171,9 +187,9 @@
 
 ## 许可证
 
-根据 MIT 许可证分发。打开 [LICENSE.txt](LICENSE.txt) 查看更多内容。
+打开 [LICENSE.txt](LICENSE.txt) 查看更多内容。
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
@@ -183,7 +199,7 @@
 
 项目链接: [https://github.com/QR-0W/SDUWH_2024_Web_School](https://github.com/QR-0W/SDUWH_2024_Web_School)
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
@@ -195,7 +211,7 @@
 
   
 
-<p align="right">(<a href="#top">回到顶部</a>)</p>
+
 
 
 
