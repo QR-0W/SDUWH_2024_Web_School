@@ -72,7 +72,11 @@
 
 =======
   //创建响应式对象的一个方法。当使用 reactive 包装一个普通对象时，该对象的所有属性都会变成响应式的
+<<<<<<< HEAD
+>>>>>>> azhui
+=======
 >>>>>>> 5fe4cff7c82853580e4b78010b75e7c68d187330
+>>>>>>> azhui
   const pageData = reactive({
     loginForm: {
       username: '',
