@@ -68,7 +68,11 @@
   const router = useRouter();
   const userStore = useUserStore();
   const loginMethod = ref('email');
+<<<<<<< HEAD
 
+=======
+  //创建响应式对象的一个方法。当使用 reactive 包装一个普通对象时，该对象的所有属性都会变成响应式的
+>>>>>>> 5fe4cff7c82853580e4b78010b75e7c68d187330
   const pageData = reactive({
     loginForm: {
       username: '',
@@ -80,6 +84,13 @@
     },
   });
 
+  /**
+   * 处理登录逻辑。
+   *
+   * 本函数负责调用userStore中的login方法，传入用户名和密码进行登录操作。
+   * 成功登录后，会执行loginSuccess函数，并打印相关用户信息。
+   * 如果登录失败，会显示错误提示。
+   */
   const handleLogin = () => {
     userStore
       .login({
