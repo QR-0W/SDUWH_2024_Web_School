@@ -193,7 +193,7 @@
       .catch((err) => {
         console.log(err);
       });
-    let text = router.resolve({ name: 'jiajiaoOrderView' });
+    let text = router.resolve({ name: 'userOrderView' });
     window.open(text.href, '_blank');
   };
 
