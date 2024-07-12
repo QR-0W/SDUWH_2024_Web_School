@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', {
         localStorage.setItem(USER_TOKEN, result.data.token);
         localStorage.setItem(USER_NAME, result.data.username);
         localStorage.setItem(USER_ID, result.data.id);
-        localStorage.setItem(USER_ROLE, result.data.role)
+        localStorage.setItem(USER_ROLE, result.data.role);
       }
 
       return result;
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user', {
         localStorage.setItem(USER_TOKEN, result.data.token);
         localStorage.setItem(USER_NAME, result.data.username);
         localStorage.setItem(USER_ID, result.data.id);
-        localStorage.setItem(USER_ROLE, result.data.role)
+        localStorage.setItem(USER_ROLE, result.data.role);
       }
 
       return result;

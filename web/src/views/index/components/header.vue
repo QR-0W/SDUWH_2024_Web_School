@@ -136,11 +136,12 @@
   // 跳转到用户中心页面
   const goUserCenter = () => {
     console.log(userStore.user_role);
-    if (userStore.user_role === '1' || userStore.user_role === '2') {
-      router.push({ name: 'userInfoEditView' });
-    } else if (userStore.user_role === '5') {
-      router.push({ name: 'jiajiaoOrderView' });
-    }
+    router.push({ name: 'userInfoEditView' });
+    // if (userStore.user_role === '1' || userStore.user_role === '2') {
+    //   router.push({ name: 'userInfoEditView' });
+    // } else if (userStore.user_role === '5') {
+    //   router.push({ name: 'jiajiaoOrderView' });
+    // }
   };
 
   // 退出登录方法
