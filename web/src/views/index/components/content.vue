@@ -59,7 +59,7 @@
               </span>
             </div>
           </div>
-          <!-- 如果没有数据则显示 -->
+          <!-- 如果没有数据则显示 暂无数据 -->
           <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">暂无数据 </div>
         </div>
       </a-spin>
@@ -80,147 +80,172 @@
 </template>
 
 <script setup>
-  import { listApi as listClassificationList } from '/@/api/classification';
-  import { listApi as listTagList } from '/@/api/tag';
-  import { listApi as listThingList } from '/@/api/thing';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
+import { listApi as listClassificationList } from '/@/api/classification';
+import { listApi as listTagList } from '/@/api/tag';
+import { listApi as listThingList } from '/@/api/thing';
+import { BASE_URL } from '/@/store/constants';
+import { useUserStore } from '/@/store';
 
-  // 获取用户存储
-  const userStore = useUserStore();
-  // 获取路由实例
-  const router = useRouter();
+// 获取用户存储
+const userStore = useUserStore();
+// 获取路由实例
+const router = useRouter();
 
-  // 定义响应式数据
-  const contentData = reactive({
-    selectX: 0,
-    selectTagId: -1,
-    cData: [],
-    selectedKeys: [],
-    tagData: [],
-    loading: false,
+// 定义响应式数据
+const contentData = reactive({
+  selectX: 0,
+  selectTagId: -1, // 选中的标签ID
+  cData: [], // 分类数据
+  selectedKeys: [], // 选中的分类
+  tagData: [], // 标签数据
+  loading: false, // 加载状态
 
-    tabData: ['最新', '最热', '推荐'],
-    selectTabIndex: 0,
-    tabUnderLeft: 12,
+  tabData: ['最新', '最热', '推荐'], // 选项卡数据
+  selectTabIndex: 0, // 选中的选项卡索引
+  tabUnderLeft: 12, // 选项卡下划线位置
 
-    thingData: [],
-    pageData: [],
+  thingData: [], // 所有内容数据
+  pageData: [], // 当前页面显示的数据
 
-    page: 1,
-    total: 0,
-    pageSize: 12,
-  });
+  page: 1, // 当前页码
+  total: 0, // 数据总条数
+  pageSize: 12, // 每页显示条数
+});
 
-  // 组件挂载时调用初始化函数
-  onMounted(() => {
-    initSider();
-    getThingList({});
-  });
+// 组件挂载时调用初始化函数
+onMounted(() => {
+  initSider(); // 初始化侧边栏
+  contentData.selectedKeys = ['-1']; // 确保“全部”按钮被选中
+  getThingList({ c: getSelectedKey() }); // 获取内容列表
+});
 
-  // 初始化侧边栏数据
-  const initSider = () => {
-    // 添加初始数据
-    contentData.cData.push({ key: '-1', title: '全部' });
-    // 获取分类列表
-    listClassificationList().then((res) => {
-      res.data.forEach((item) => {
-        item.key = item.id;
-        contentData.cData.push(item);
-      });
+/**
+ * 初始化侧边栏数据
+ */
+const initSider = () => {
+  // 添加初始数据
+  contentData.cData.push({ key: '-1', title: '全部' });
+  // 获取分类列表
+  listClassificationList().then((res) => {
+    res.data.forEach((item) => {
+      item.key = item.id;
+      contentData.cData.push(item);
     });
-    // 获取标签列表
-    listTagList().then((res) => {
-      contentData.tagData = res.data;
-    });
-  };
+  });
+  // 获取标签列表
+  listTagList().then((res) => {
+    contentData.tagData = res.data;
+  });
+};
 
-  // 获取选中的分类ID
-  const getSelectedKey = () => {
-    if (contentData.selectedKeys.length > 0) {
-      return contentData.selectedKeys[0];
-    } else {
-      return -1;
-    }
-  };
+/**
+ * 获取选中的年级分类ID
+ * @returns {number} 选中的分类ID
+ */
+const getSelectedKey = () => {
+  if (contentData.selectedKeys.length > 0) {
+    return contentData.selectedKeys[0];
+  } else {
+    return -1;
+  }
+};
 
-  // 处理分类选择事件
-  const onSelect = (selectedKeys) => {
-    contentData.selectedKeys = selectedKeys;
-    console.log(contentData.selectedKeys[0]);
-    if (contentData.selectedKeys.length > 0) {
-      getThingList({ c: getSelectedKey() });
-    }
-    contentData.selectTagId = -1;
-  };
+/**
+ * 处理年级分类选择事件
+ * @param {Array} selectedKeys 选中的分类键
+ */
+const onSelect = (selectedKeys) => {
+  contentData.selectedKeys = selectedKeys;
+  console.log(contentData.selectedKeys[0]);
+  if (contentData.selectedKeys.length > 0) {
+    getThingList({ c: getSelectedKey() });
+  }
+  contentData.selectTagId = -1;
+};
 
-  // 处理标签点击事件
-  const clickTag = (index) => {
-    contentData.selectedKeys = [];
-    contentData.selectTagId = index;
-    getThingList({ tag: contentData.selectTagId });
-  };
+/**
+ * 处理家教标签点击事件
+ * @param {number} index 标签ID
+ */
+const clickTag = (index) => {
+  contentData.selectedKeys = [];
+  contentData.selectTagId = index;
+  getThingList({ tag: contentData.selectTagId });
+};
 
-  // 处理选项卡选择事件
-  const selectTab = (index) => {
-    contentData.selectTabIndex = index;
-    contentData.tabUnderLeft = 12 + 50 * index;
-    console.log(contentData.selectTabIndex);
+/**
+ * 处理选项卡选择事件
+ * @param {number} index 选项卡索引
+ */
+const selectTab = (index) => {
+  contentData.selectTabIndex = index;
+  contentData.tabUnderLeft = 12 + 50 * index;
+  console.log(contentData.selectTabIndex);
 
-    let sort = 'recent';
+  let sort = 'recent';
 
-    if (index == 1) {
-      sort = 'hot';
-    } else if (index == 2) {
-      sort = 'recommend';
-    } else if (index == 3) {
-      sort = 'loc';
-    }
+  if (index == 1) {
+    sort = 'hot';
+  } else if (index == 2) {
+    sort = 'recommend';
+  } else if (index == 3) {
+    sort = 'loc';
+  }
 
-    const data = { sort: sort };
-    if (contentData.selectTagId !== -1) {
-      data['tag'] = contentData.selectTagId;
-    } else {
-      data['c'] = getSelectedKey();
-    }
-    getThingList(data);
-  };
+  const data = { sort: sort };
+  if (contentData.selectTagId !== -1) {
+    data['tag'] = contentData.selectTagId;
+  } else {
+    data['c'] = getSelectedKey();
+  }
+  getThingList(data);
+};
 
-  // 处理内容项点击事件，跳转到详情页
-  const handleDetail = (item) => {
-    let text = router.resolve({ name: 'detail', query: { id: item.id } });
-    window.open(text.href, '_blank');
-  };
+/**
+ * 处理内容项点击事件，跳转到详情页
+ * @param {Object} item 点击的内容项
+ */
+const handleDetail = (item) => {
+  let text = router.resolve({ name: 'detail', query: { id: item.id } });
+  window.open(text.href, '_blank');
+};
 
-  // 处理分页切换事件
-  const changePage = (page) => {
-    contentData.page = page;
-    let start = (contentData.page - 1) * contentData.pageSize;
-    contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize);
-    console.log('第' + contentData.page + '页');
-  };
+/**
+ * 处理分页切换事件
+ * @param {number} page 页码
+ */
+const changePage = (page) => {
+  contentData.page = page;
+  let start = (contentData.page - 1) * contentData.pageSize;
+  contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize);
+  console.log('第' + contentData.page + '页');
+};
 
-  // 获取内容列表
-  const getThingList = (data) => {
-    contentData.loading = true;
-    listThingList(data)
-      .then((res) => {
-        contentData.loading = false;
-        res.data.forEach((item, index) => {
-          if (item.cover) {
-            item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-          }
-        });
-        console.log(res);
-        contentData.thingData = res.data;
-        contentData.total = contentData.thingData.length;
-        changePage(1);
-      })
-      .catch((err) => {
-        console.log(err);
-        contentData.loading = false;
+/**
+ * 获取家教列表
+ * @param {Object} data 请求参数
+ */
+const getThingList = (data) => {
+  contentData.loading = true;
+  listThingList(data)
+    .then((res) => {
+      contentData.loading = false;
+      res.data.forEach((item, index) => {
+        if (item.cover) {
+          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
+        }
       });
-  };
+      console.log(res);
+      contentData.thingData = res.data;
+      contentData.total = contentData.thingData.length;
+      changePage(1);
+    })
+    .catch((err) => {
+      console.log(err);
+      contentData.loading = false;
+    });
+};
+
 </script>
 
 <style scoped lang="less">

@@ -47,98 +47,98 @@
 </template>
 
 <script setup>
-  import { listApi as listThingList } from '/@/api/thing';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
+import { listApi as listThingList } from '/@/api/thing';
+import { BASE_URL } from '/@/store/constants';
+import { useUserStore } from '/@/store';
 
-  const userStore = useUserStore();
-  const router = useRouter();
-  const route = useRoute();
+const userStore = useUserStore();
+const router = useRouter();
+const route = useRoute();
 
-  // 定义响应式数据
-  const tData = reactive({
-    loading: false, // 加载状态
-    keyword: '', // 搜索关键字
-    thingData: [], // 所有内容数据
-    pageData: [], // 当前页面显示的数据
+// 定义响应式数据
+const tData = reactive({
+  loading: false, // 加载状态
+  keyword: '', // 搜索关键字
+  thingData: [], // 所有内容数据
+  pageData: [], // 当前页面显示的数据
 
-    page: 1, // 当前页码
-    total: 0, // 数据总条数
-    pageSize: 20, // 每页显示条数
-  });
+  page: 1, // 当前页码
+  total: 0, // 数据总条数
+  pageSize: 20, // 每页显示条数
+});
 
-  // 组件挂载时执行搜索
-  onMounted(() => {
+// 组件挂载时执行搜索
+onMounted(() => {
+  search();
+});
+
+/**
+ * 监听路由 query 参数的变化
+ * 当路由参数发生变化时，调用 search 函数进行搜索
+ */
+watch(
+  () => route.query,
+  (newPath, oldPath) => {
     search();
-  });
+  },
+  { immediate: false }
+);
 
-  /**
-   * 监听路由 query 参数的变化
-   * 当路由参数发生变化时，调用 search 函数进行搜索
-   */
-  watch(
-    () => route.query,
-    (newPath, oldPath) => {
-      search();
-    },
-    { immediate: false }
-  );
+/**
+ * 搜索函数
+ * 根据路由中的 keyword 参数进行搜索
+ */
+const search = () => {
+  tData.keyword = route.query.keyword.trim(); // 获取关键字
+  getThingList({ keyword: tData.keyword }); // 获取内容列表
+};
 
-  /**
-   * 搜索函数
-   * 根据路由中的 keyword 参数进行搜索
-   */
-  const search = () => {
-    tData.keyword = route.query.keyword.trim(); // 获取关键字
-    getThingList({ keyword: tData.keyword }); // 获取内容列表
-  };
+/**
+ * 分页事件
+ * @param {number} page 页码
+ * 更新当前页码，重新计算当前页面显示的数据
+ */
+const changePage = (page) => {
+  tData.page = page; // 更新当前页码
+  let start = (tData.page - 1) * tData.pageSize; // 计算当前页的起始索引
+  tData.pageData = tData.thingData.slice(start, start + tData.pageSize); // 设置当前页面显示的数据
+  console.log('第' + tData.page + '页'); // 打印当前页码
+};
 
-  /**
-   * 分页事件
-   * @param {number} page 页码
-   * 更新当前页码，重新计算当前页面显示的数据
-   */
-  const changePage = (page) => {
-    tData.page = page;
-    let start = (tData.page - 1) * tData.pageSize;
-    tData.pageData = tData.thingData.slice(start, start + tData.pageSize);
-    console.log('第' + tData.page + '页');
-  };
+/**
+ * 处理内容项点击事件，跳转到详情页
+ * @param {Object} item 点击的内容项
+ * 解析详情页路由并打开新页面
+ */
+const handleDetail = (item) => {
+  let text = router.resolve({ name: 'detail', query: { id: item.id } }); // 解析详情页路由
+  window.open(text.href, '_blank'); // 打开新页面
+};
 
-  /**
-   * 处理内容项点击事件，跳转到详情页
-   * @param {Object} item 点击的内容项
-   * 解析详情页路由并打开新页面
-   */
-  const handleDetail = (item) => {
-    let text = router.resolve({ name: 'detail', query: { id: item.id } });
-    window.open(text.href, '_blank');
-  };
-
-
-  /**
-   * 获取内容列表
-   * @param {Object} data 请求参数
-   * */
-  const getThingList = (data) => {
-    tData.loading = true; // 设置加载状态
-    listThingList(data)
-      .then((res) => {
-        res.data.forEach((item, index) => {
-          if (item.cover) {
-            item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-          }
-        });
-        tData.thingData = res.data; // 设置数据
-        tData.total = tData.thingData.length; // 设置总条数
-        changePage(1); // 初始化第一页
-        tData.loading = false; // 关闭加载状态
-      })
-      .catch((err) => {
-        console.log(err);
-        tData.loading = false; // 关闭加载状态
+/**
+ * 获取内容列表
+ * @param {Object} data 请求参数
+ * */
+const getThingList = (data) => {
+  tData.loading = true; // 设置加载状态
+  listThingList(data)
+    .then((res) => {
+      res.data.forEach((item, index) => {
+        if (item.cover) {
+          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover; // 设置图片路径
+        }
       });
-  };
+      tData.thingData = res.data; // 设置数据
+      tData.total = tData.thingData.length; // 设置总条数
+      changePage(1); // 初始化第一页
+      tData.loading = false; // 关闭加载状态
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+      tData.loading = false; // 关闭加载状态
+    });
+};
+
 </script>
 
 <style scoped lang="less">

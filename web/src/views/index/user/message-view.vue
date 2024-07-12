@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import {listApi} from '/@/api/notice'
+import {NoticeListApi} from '/@/api/notice'
 
 
 let loading = ref(false)
@@ -44,7 +44,7 @@ onMounted(()=>{
 
 const getMessageList =()=> {
   loading.value = true
-  listApi().then(res => {
+  NoticeListApi().then(res => {
     msgData.value = res.data
     loading.value = false
   }).catch(err => {
