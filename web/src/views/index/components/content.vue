@@ -1,12 +1,16 @@
 <template>
+  <!-- 主内容区域 -->
   <div class="content">
+    <!-- 左侧内容区域 -->
     <div class="content-left">
+      <!-- 年级分类 -->
       <div class="left-search-item">
-        <h4>科目分类</h4>
+        <h4>年级分类</h4>
         <a-tree :tree-data="contentData.cData" :selected-keys="contentData.selectedKeys" @select="onSelect" style="min-height: 220px" />
       </div>
-      <div class="left-search-item"
-        ><h4>热门标签</h4>
+      <!-- 热门标签 -->
+      <div class="left-search-item">
+        <h4>热门标签</h4>
         <div class="tag-view tag-flex-view">
           <span
             class="tag"
@@ -14,12 +18,15 @@
             v-for="item in contentData.tagData"
             :key="item.id"
             @click="clickTag(item.id)"
-            >{{ item.title }}</span
           >
+            {{ item.title }}
+          </span>
         </div>
       </div>
     </div>
+    <!-- 右侧内容区域 -->
     <div class="content-right">
+      <!-- 顶部选择视图 -->
       <div class="top-select-view flex-view">
         <div class="order-view">
           <span class="title"></span>
@@ -35,11 +42,14 @@
           <span :style="{ left: contentData.tabUnderLeft + 'px' }" class="tab-underline"></span>
         </div>
       </div>
+      <!-- 加载中状态显示 -->
       <a-spin :spinning="contentData.loading" style="min-height: 200px">
         <div class="pc-thing-list flex-view">
-          <div v-for="item in contentData.pageData" :key="item.id" @click="handleDetail(item)" class="thing-item item-column-3"
-            ><!---->
-            <div class="img-view"> <img :src="item.cover" /></div>
+          <!-- 展示每个内容项 -->
+          <div v-for="item in contentData.pageData" :key="item.id" @click="handleDetail(item)" class="thing-item item-column-3">
+            <div class="img-view">
+              <img :src="item.cover" />
+            </div>
             <div class="info-view">
               <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
               <span>
@@ -49,9 +59,11 @@
               </span>
             </div>
           </div>
-          <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">暂无数据</div>
+          <!-- 如果没有数据则显示 -->
+          <div v-if="contentData.pageData.length <= 0 && !contentData.loading" class="no-data" style="">暂无数据 </div>
         </div>
       </a-spin>
+      <!-- 分页视图 -->
       <div class="page-view" style="">
         <a-pagination
           v-model="contentData.page"
@@ -74,9 +86,12 @@
   import { BASE_URL } from '/@/store/constants';
   import { useUserStore } from '/@/store';
 
+  // 获取用户存储
   const userStore = useUserStore();
+  // 获取路由实例
   const router = useRouter();
 
+  // 定义响应式数据
   const contentData = reactive({
     selectX: 0,
     selectTagId: -1,
@@ -85,7 +100,7 @@
     tagData: [],
     loading: false,
 
-    tabData: ['最新', '最热', '推荐'],
+    tabData: ['最新', '最热', '推荐', '同城'],
     selectTabIndex: 0,
     tabUnderLeft: 12,
 
@@ -97,24 +112,30 @@
     pageSize: 12,
   });
 
+  // 组件挂载时调用初始化函数
   onMounted(() => {
     initSider();
     getThingList({});
   });
 
+  // 初始化侧边栏数据
   const initSider = () => {
+    // 添加初始数据
     contentData.cData.push({ key: '-1', title: '全部' });
+    // 获取分类列表
     listClassificationList().then((res) => {
       res.data.forEach((item) => {
         item.key = item.id;
         contentData.cData.push(item);
       });
     });
+    // 获取标签列表
     listTagList().then((res) => {
       contentData.tagData = res.data;
     });
   };
 
+  // 获取选中的分类ID
   const getSelectedKey = () => {
     if (contentData.selectedKeys.length > 0) {
       return contentData.selectedKeys[0];
@@ -122,6 +143,8 @@
       return -1;
     }
   };
+
+  // 处理分类选择事件
   const onSelect = (selectedKeys) => {
     contentData.selectedKeys = selectedKeys;
     console.log(contentData.selectedKeys[0]);
@@ -130,18 +153,30 @@
     }
     contentData.selectTagId = -1;
   };
+
+  // 处理标签点击事件
   const clickTag = (index) => {
     contentData.selectedKeys = [];
     contentData.selectTagId = index;
     getThingList({ tag: contentData.selectTagId });
   };
 
-  // 最新|最热|推荐
+  // 处理选项卡选择事件
   const selectTab = (index) => {
     contentData.selectTabIndex = index;
     contentData.tabUnderLeft = 12 + 50 * index;
     console.log(contentData.selectTabIndex);
-    let sort = index === 0 ? 'recent' : index === 1 ? 'hot' : 'recommend';
+
+    let sort = 'recent';
+
+    if (index == 1) {
+      sort = 'hot';
+    } else if (index == 2) {
+      sort = 'recommend';
+    } else if (index == 3) {
+      sort = 'loc';
+    }
+
     const data = { sort: sort };
     if (contentData.selectTagId !== -1) {
       data['tag'] = contentData.selectTagId;
@@ -150,18 +185,22 @@
     }
     getThingList(data);
   };
+
+  // 处理内容项点击事件，跳转到详情页
   const handleDetail = (item) => {
-    // 跳转新页面
     let text = router.resolve({ name: 'detail', query: { id: item.id } });
     window.open(text.href, '_blank');
   };
-  // 分页事件
+
+  // 处理分页切换事件
   const changePage = (page) => {
     contentData.page = page;
     let start = (contentData.page - 1) * contentData.pageSize;
     contentData.pageData = contentData.thingData.slice(start, start + contentData.pageSize);
     console.log('第' + contentData.page + '页');
   };
+
+  // 获取内容列表
   const getThingList = (data) => {
     contentData.loading = true;
     listThingList(data)

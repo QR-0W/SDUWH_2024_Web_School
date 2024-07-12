@@ -8,6 +8,7 @@ enum URL {
   update = '/api/thing/update',
   delete = '/api/thing/delete',
   detail = '/api/thing/detail',
+  listloc = '/api/thing/detailbyloc',
   listUserThing = '/api/thing/listUserThing',
 }
 
@@ -19,5 +20,6 @@ const updateApi = async (data: any) =>
   post<any>({ url: URL.update, data: data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
 const deleteApi = async (params: any) => post<any>({ url: URL.delete, params: params, headers: {} });
 const detailApi = async (params: any) => get<any>({ url: URL.detail, params: params, headers: {} });
+const locdetailApi = async (params: any) => get<any>({ url: URL.listloc, params: params, headers: {} });
 
-export { listApi, createApi, updateApi, deleteApi, detailApi, listUserThingApi };
+export { listApi, createApi, updateApi, deleteApi, detailApi, listUserThingApi, locdetailApi };
