@@ -1,6 +1,3 @@
-### 学习文档
-
-
 #### 部署步骤
 
 1. 修改constants.ts中的BASE_URL

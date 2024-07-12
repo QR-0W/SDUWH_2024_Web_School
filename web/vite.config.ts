@@ -12,13 +12,14 @@ export default ({ command }: ConfigEnv): UserConfig => {
   const isBuild = command === 'build';
   let base: string;
   if (command === 'build') {
-    base = '/';
+    base = './';
   } else {
     base = '/';
   }
+  console.log('base', base);
   return {
     base,
-    publicDir: "public", //静态资源服务的文件夹
+    publicDir: 'public', //静态资源服务的文件夹
     resolve: {
       alias: [
         {
@@ -48,6 +49,13 @@ export default ({ command }: ConfigEnv): UserConfig => {
       host: '0.0.0.0', // IP配置，支持从IP启动
       https: false, // 禁用https
       // proxy,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:9100',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
   };
 };

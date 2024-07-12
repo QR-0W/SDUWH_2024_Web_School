@@ -21,8 +21,8 @@
                   <span class="a-price" style="font-size: 20px">{{ detailData.price }}元/时</span>
                 </span>
                 <div class="translators flex-view" style="">
-                  <span>科目：</span>
-                  <span class="name">{{ detailData.classification_title }}</span>
+                  <span>年级:</span>
+                  <span class="name">{{ classification_title }}</span>
                 </div>
                 <div class="translators flex-view" style="">
                   <span>性别：</span>
@@ -36,10 +36,16 @@
                   <span>地区：</span>
                   <span class="name">{{ detailData.location }}</span>
                 </div>
-                <button class="buy-btn" @click="handleOrder(detailData)">
-                  <img :src="AddIcon" />
-                  <span>立即联系</span>
-                </button>
+                <div v-if="route.query.id.trim() != userStore.user_id" class="flex-view">
+                  <button class="buy-btn" @click="handleOrder(detailData)">
+                    <img :src="AddIcon" />
+                    <span>立即联系</span>
+                  </button>
+                  <button class="buy-btn" @click="createOrder">
+                    <img :src="AvatarIcon" />
+                    <span>现在下单</span>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="thing-counts hidden-sm">
@@ -154,7 +160,9 @@
             <div class="title">热门推荐</div>
             <div class="things">
               <div class="thing-item thing-item" v-for="item in recommendData" @click="handleDetail(item)">
-                <div class="img-view"> <img :src="item.cover" /></div>
+                <div class="img-view">
+                  <img :src="item.cover" />
+                </div>
                 <div class="info-view">
                   <h3 class="thing-name">{{ item.title.substring(0, 12) }}</h3>
                   <span>
@@ -172,6 +180,7 @@
 
     <Footer />
   </div>
+
 </template>
 <script setup>
   import { message, Modal } from 'ant-design-vue';
@@ -201,6 +210,7 @@
   let tabUnderLeft = ref(6);
   let tabData = ref(['简介', '评论']);
   let selectTabIndex = ref(0);
+  let classification_title = ref('');
 
   let commentData = ref([]);
   let recommendData = ref([]);
@@ -226,11 +236,28 @@
       .then((res) => {
         detailData.value = res.data;
         detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
+        if (detailData.classificationId == '1') {
+          classification_title = '小学';
+        } else if (detailData.value.classificationId == '2') {
+          classification_title = '初中';
+        } else if (detailData.value.classificationId == '3') {
+          classification_title = '高中';
+        }
+        console.log(detailData.value.classificationId);
+        console.log(classification_title);
+        console.log(detailData);
       })
       .catch((err) => {
         message.error('获取详情失败');
       });
   };
+
+  const createOrder = () => {
+    // 跳转新页面
+    let text = router.resolve({ name: 'pay', query: { id: thingId.value } });
+    window.open(text.href, '_blank');
+  };
+
   const addToWish = () => {
     let userId = userStore.user_id;
     if (userId) {
@@ -289,7 +316,7 @@
           }
         });
         console.log(res);
-        recommendData.value = res.data.slice(0, 6);
+        recommendData.value = res.data.slice(0, 4);
       })
       .catch((err) => {
         console.log(err);
@@ -593,6 +620,8 @@
     outline: none;
     border: none;
     margin-top: 18px;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 
   .buy-btn img {
@@ -729,6 +758,7 @@
           //background: #f6f9fb;
           overflow: hidden;
           padding: 0 16px;
+
           .thing-name {
             line-height: 32px;
             margin-top: 12px;
@@ -948,6 +978,7 @@
     top: -0.5em;
     font-size: 12px;
   }
+
   .a-price {
     color: #0f1111;
     font-size: 14px;

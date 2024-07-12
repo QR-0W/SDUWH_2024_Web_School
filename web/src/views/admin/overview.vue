@@ -1,304 +1,147 @@
 <template>
-
   <a-spin :spinning="showSpin">
     <div class="main">
-
-      <a-card title="最近一周访问量">
-        <div style="height: 300px;" ref="visitChartDiv"></div>
+      <a-card style="margin-top: 50px;" title="最近访问量">
+        <div style="height: 650px; width: 1400px;" ref="visitChartDiv"></div>
       </a-card>
-
-      <a-row :gutter="[20,20]">
-        <a-col :sm="24" :md="24" :lg="12">
-          <a-card title="热门家教排名" style="flex:1;">
-            <div style="height: 300px;" ref="barChartDiv"></div>
-          </a-card>
-        </a-col>
-        <a-col :sm="24" :md="24" :lg="12">
-          <a-card title="热门分类比例" style="flex:1;">
-            <div style="height: 300px;" ref="pieChartDiv"></div>
-          </a-card>
-        </a-col>
-      </a-row>
-
     </div>
   </a-spin>
-
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-
+import { ref, reactive, onMounted } from 'vue';
 import { InteractionOutlined, StarFilled, StarTwoTone } from '@ant-design/icons-vue';
-import {listApi} from '/@/api/overview'
+import { listOpLogListApi } from '/@/api/log';
+import * as echarts from 'echarts';
 
-let showSpin = ref(true)
+let showSpin = ref(true);
 
-const visitChartDiv = ref()
-const barChartDiv = ref()
-const pieChartDiv = ref()
+const visitChartDiv = ref<HTMLDivElement | null>(null);
 
-let visitChart, barChart, pieChart;
+let visitChart: echarts.ECharts;
 
-let tdata = reactive({
-  data: {}
-})
+const tdata = reactive<{ data: { time: string; count: number }[] }>({
+  data: [],
+});
 
 onMounted(() => {
-  list()
-  window.onresize = function () { // resize
-    visitChart.resize()
-    barChart.resize()
-    pieChart.resize()
-  }
-})
+  list();
+  window.onresize = function () {
+    visitChart.resize();
+  };
+});
 
 const list = () => {
-  listApi({}).then(res => {
-    console.log(res.data)
-    tdata.data = res.data
-    initCharts()
-    initBarChart()
-    initPieChart()
+  listOpLogListApi({})
+    .then((res) => {
+      console.log(res.data);
+      const counts = new Map<number, number>();
 
-    showSpin.value = false
-  }).catch(err => {
-    showSpin.value = false
-  })
-}
+      for (const item of res.data) {
+        const date = new Date(item.reTimeNew);
+        const minutes = date.getMinutes();
+        date.setMinutes(minutes - (minutes % 1), 0, 0);
+
+        const count = counts.get(date.getTime());
+        counts.set(date.getTime(), (count || 0) + 1);
+      }
+
+      const data = Array.from(counts)
+        .sort((a, b) => a[0] - b[0])
+        .map(([time, count]) => {
+          const date = new Date(time);
+          return {
+            time: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`,
+            count,
+          };
+        });
+      console.log(data);
+      tdata.data = data;
+      initCharts();
+
+      showSpin.value = false;
+    })
+    .catch((err) => {
+      showSpin.value = false;
+    });
+};
 
 const initCharts = () => {
-  let xData = []
-  let uvData = []
-  let pvData = []
-  tdata.data.visitList.forEach((item, index) => {
-    xData.push(item.day)
-    uvData.push(item.uv)
-    pvData.push(item.pv)
-  })
-  echarts.init(visitChartDiv.value)
-  visitChart = echarts.init(visitChartDiv.value)
-  let option = {
-    title: {
-      text: ''
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['IP', 'visit'],
-      top: '90%',
-      left: 'center'
-    },
-    grid: {
-      top: '30px',
-      left: '20px',
-      right: '20px',
-      bottom: '40px',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      axisLabel: {
-        textStyle: {
-          color: '#2F4F4F'
-        }
+  if (visitChartDiv.value) {
+    visitChart = echarts.init(visitChartDiv.value);
+    const option: echarts.EChartsOption = {
+      title: {
+        text: '',
       },
-      axisLine: {
-        lineStyle: {
-          color: '#2F4F4F'
-        }
+      tooltip: {
+        trigger: 'axis',
       },
-      // boundaryGap: false,
-      data: xData
-    },
-    yAxis: {
-      type: 'value',
-      axisLine: {show: false},
-      axisTick: {show: false},
-      splitLine: {
-        show: true, // 网格线
-        lineStyle: {
-          color: 'rgba(10, 10, 10, 0.1)',
-          width: 1,
-          type: 'solid'
-        }
-      }
-    },
-    series: [
-      {
-        name: 'IP',
-        type: 'line',
-        stack: 'Total',
-        data: uvData
+      grid: {
+        top: '30px',
+        left: '20px',
+        right: '20px',
+        bottom: '50px',
+        containLabel: true,
       },
-      {
-        name: 'visit',
-        type: 'line',
-        stack: 'Total',
-        data: pvData
-      }
-    ]
+      xAxis: {
+        type: 'category',
+        axisLabel: {
+          textStyle: {
+            color: '#2F4F4F',
+          },
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#2F4F4F',
+          },
+        },
+        data: tdata.data.map((v) => v.time),
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: 'rgba(10, 10, 10, 0.1)',
+            width: 1,
+            type: 'solid',
+          },
+        },
+      },
+      dataZoom: [
+        {
+          show: true,
+          realtime: true,
+          start: 30,
+          end: 70,
+          xAxisIndex: [0, 1]
+        },
+        {
+          type: 'inside',
+          realtime: true,
+          start: 30,
+          end: 70,
+          xAxisIndex: [0, 1]
+        }
+      ],
+      series: [
+        {
+          name: 'visit',
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          data: tdata.data.map((v) => v.count),
+        },
+      ],
+    };
+    visitChart.setOption(option);
   }
-  visitChart.setOption(option)
-}
-
-const initBarChart = () => {
-  let xData = []
-  let yData = []
-  tdata.data.popularThings.forEach((item, index) => {
-    xData.push(item.title)
-    yData.push(item.count)
-  })
-  // const xData = ['遥远的救世主', '平凡的世界', '测试书籍12', '测试书籍13', '测试书籍14', '测试书籍15', '测试书籍16', '测试书籍17']
-  // const yData = [220, 200, 180, 150, 130, 110, 100, 80]
-  barChart = echarts.init(barChartDiv.value)
-  let option = {
-    grid: {
-      // 让图表占满容器
-      top: '40px',
-      left: '40px',
-      right: '40px',
-      bottom: '40px'
-    },
-    title: {
-      text: '热门家教排名',
-      textStyle: {
-        color: '#aaa',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: 18
-      },
-      x: 'center',
-      y: 'top'
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    xAxis: {
-      data: xData,
-      type: 'category',
-      axisLabel: {
-        rotate: 30, // 倾斜30度,
-        textStyle: {
-          color: '#2F4F4F'
-        }
-      },
-      axisLine: {
-        lineStyle: {
-          color: '#2F4F4F'
-        }
-      }
-    },
-    yAxis: {
-      type: 'value',
-      axisLine: {show: false},
-      axisTick: {show: false},
-      splitLine: {
-        show: true, // 网格线
-        lineStyle: {
-          color: 'rgba(10, 10, 10, 0.1)',
-          width: 1,
-          type: 'solid'
-        }
-      }
-    },
-    series: [
-      {
-        data: yData,
-        type: 'bar',
-        itemStyle: {
-          normal: {
-            color: function (params) {
-              // 柱图颜色
-              return '#70B0EA'
-            }
-          }
-        }
-      }
-    ]
-  }
-  barChart.setOption(option)
-}
-
-const initPieChart = () => {
-  let pieData = []
-  tdata.data.popularClassification.forEach((item, index) => {
-    pieData.push({name: item.title, value: item.count})
-  })
-  pieChart = echarts.init(pieChartDiv.value)
-  const option = {
-    grid: {
-      // 让图表占满容器
-      top: '40px',
-      left: '40px',
-      right: '40px',
-      bottom: '40px'
-    },
-    title: {
-      text: '热门家教分类',
-      textStyle: {
-        color: '#aaa',
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: 18
-      },
-      x: 'center',
-      y: 'top'
-    },
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {
-      top: '90%',
-      left: 'center'
-    },
-    series: [
-      {
-        name: '分类',
-        type: 'pie',
-        itemStyle: {
-          normal: {
-            color: function (params) {
-              const colorList = ['#70B0EA', '#B3A3DA', '#88DEE2', '#62C4C8', '#58A3A1']
-              let index = params.dataIndex
-              if (params.dataIndex >= colorList.length) {
-                index = params.dataIndex - colorList.length
-              }
-              return colorList[index]
-            }
-          }
-        },
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 20,
-            fontWeight: 'bold'
-          }
-        },
-        labelLine: {
-          show: false
-        },
-        data: pieData
-      }
-    ]
-  }
-  pieChart.setOption(option)
-}
-
-
+};
 </script>
 
 <style lang="less" scoped>
-
 .main {
   height: 100%;
   display: flex;
@@ -332,5 +175,4 @@ const initPieChart = () => {
     }
   }
 }
-
 </style>
