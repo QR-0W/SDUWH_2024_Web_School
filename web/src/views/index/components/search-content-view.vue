@@ -72,22 +72,32 @@
     search();
   });
 
-  // 监听路由 query 参数的变化
+  /**
+   * 监听路由 query 参数的变化
+   * 当路由参数发生变化时，调用 search 函数进行搜索
+   */
   watch(
     () => route.query,
     (newPath, oldPath) => {
       search();
     },
-    { immediate: false },
+    { immediate: false }
   );
 
-  // 搜索函数
+  /**
+   * 搜索函数
+   * 根据路由中的 keyword 参数进行搜索
+   */
   const search = () => {
     tData.keyword = route.query.keyword.trim(); // 获取关键字
     getThingList({ keyword: tData.keyword }); // 获取内容列表
   };
 
-  // 分页事件
+  /**
+   * 分页事件
+   * @param {number} page 页码
+   * 更新当前页码，重新计算当前页面显示的数据
+   */
   const changePage = (page) => {
     tData.page = page;
     let start = (tData.page - 1) * tData.pageSize;
@@ -95,13 +105,21 @@
     console.log('第' + tData.page + '页');
   };
 
-  // 处理内容项点击事件，跳转到详情页
+  /**
+   * 处理内容项点击事件，跳转到详情页
+   * @param {Object} item 点击的内容项
+   * 解析详情页路由并打开新页面
+   */
   const handleDetail = (item) => {
     let text = router.resolve({ name: 'detail', query: { id: item.id } });
     window.open(text.href, '_blank');
   };
 
-  // 获取内容列表
+
+  /**
+   * 获取内容列表
+   * @param {Object} data 请求参数
+   * */
   const getThingList = (data) => {
     tData.loading = true; // 设置加载状态
     listThingList(data)
