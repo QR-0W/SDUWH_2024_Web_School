@@ -13,10 +13,9 @@
             </div>
           </div>
           <div class="item flex-view">
-            <div class="label">绑定手机</div>
+            <div class="label">绑定邮箱</div>
             <div class="right-box">
               <input class="input-dom" placeholder="请输入手机号">
-              <a-button type="link" @click="handleBindMobile()">更换</a-button>
             </div>
           </div>
         </div>
@@ -26,19 +25,19 @@
             <div class="item flex-view">
               <div class="label">当前密码</div>
               <div class="right-box">
-                <a-input-password placeholder="输入当前密码" v-model:value="password"/>
+                <a-input-password placeholder="输入当前密码" v-model:value="password" />
               </div>
             </div>
             <div class="item flex-view">
               <div class="label">新密码</div>
               <div class="right-box">
-                <a-input-password placeholder="输入新密码" v-model:value="newPassword1"/>
+                <a-input-password placeholder="输入新密码" v-model:value="newPassword1" />
               </div>
             </div>
             <div class="item flex-view">
               <div class="label">确认新密码</div>
               <div class="right-box">
-                <a-input-password placeholder="重复输入密码" v-model:value="newPassword2"/>
+                <a-input-password placeholder="重复输入密码" v-model:value="newPassword2" />
               </div>
             </div>
             <div class="item flex-view">
@@ -56,13 +55,13 @@
 </template>
 
 <script setup>
-import {message} from "ant-design-vue";
+import { message } from "ant-design-vue"
 
-import {updateUserPwdApi} from '/@/api/user'
-import {useUserStore} from "/@/store";
+import { updateUserPwdApi } from '/@/api/user'
+import { useUserStore } from "/@/store"
 
-const router = useRouter();
-const userStore = useUserStore();
+const router = useRouter()
+const userStore = useUserStore()
 
 let password = ref('')
 let newPassword1 = ref('')
@@ -84,7 +83,7 @@ const handleUpdatePwd = () => {
 
   let userId = userStore.user_id
   updateUserPwdApi({
-    userId:  userId,
+    userId: userId,
     password: password.value,
     newPassword: newPassword1.value,
   }).then(res => {
@@ -104,7 +103,8 @@ progress {
   display: flex;
 }
 
-input, textarea {
+input,
+textarea {
   outline: none;
   border-style: none;
 }

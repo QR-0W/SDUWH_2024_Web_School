@@ -2,7 +2,7 @@
   <div id="userLayout">
     <div class="user-layout-header">
       <img class="logo" :src="logoImage" alt="">
-      <span>家教后台管理系统</span>
+      <span>妈妈再也不用担心我的学习-后台管理系统</span>
     </div>
     <div class="main-container">
       <div class="main">
@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import {useUserStore} from '/@/store';
-import logoImage from '/@/assets/images/k-logo.png';
+import logoImage from '/@/assets/images/logo2.svg';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -141,7 +141,7 @@ const loginSuccess = () => {
   .main-container {
     width: 100%;
     height: calc(100vh - 160px);
-    background-image: url('../images/117201993_p1.jpg');
+    background-image: url('../images/admin-login-bg.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
