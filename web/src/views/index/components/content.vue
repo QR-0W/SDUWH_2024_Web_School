@@ -100,7 +100,7 @@
     tagData: [],
     loading: false,
 
-    tabData: ['最新', '最热', '推荐', '同城'],
+    tabData: ['最新', '最热', '推荐'],
     selectTabIndex: 0,
     tabUnderLeft: 12,
 
