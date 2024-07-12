@@ -180,7 +180,6 @@
 
     <Footer />
   </div>
-
 </template>
 <script setup>
   import { message, Modal } from 'ant-design-vue';
