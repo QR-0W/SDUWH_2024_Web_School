@@ -3,19 +3,18 @@
     <div class="login-page pc-style">
       <img :src="LogoIcon" alt="logo" class="logo-icon" />
       <div class="login-tab">
-        <div class="tab-selected">
-          <span>邮箱登录</span>
-          <span class="tabline tabline-width"></span>
-        </div>
+        <a-radio-group v-model:value="loginMethod" size="large">
+          <a-radio-button value="password">密码登录</a-radio-button>
+          <a-radio-button value="email">邮箱登录</a-radio-button>
+        </a-radio-group>
       </div>
-      <div class="mail-login" type="login">
+      <div class="mail-login" v-if="loginMethod === 'password'" type="login">
         <div class="common-input">
           <img :src="MailIcon" class="left-icon" />
           <div class="input-view">
-            <input placeholder="请输入注册邮箱" v-model="pageData.loginForm.username" type="text" class="input" />
+            <input placeholder="请输入用户名" v-model="pageData.loginForm.username" type="text" class="input" />
             <p class="err-view"> </p>
           </div>
-          <!---->
         </div>
         <div class="common-input">
           <img :src="PwdIcon" class="left-icon" />
@@ -23,11 +22,31 @@
             <input placeholder="请输入密码" v-model="pageData.loginForm.password" type="password" class="input" />
             <p class="err-view"> </p>
           </div>
-          <!--          <img src="@/assets/pwd-hidden.svg" class="right-icon">-->
-          <!---->
         </div>
         <div class="next-btn-view">
           <button class="next-btn btn-active" style="margin: 16px 0px" @click="handleLogin">登录</button>
+        </div>
+      </div>
+      <div class="mail-login" v-if="loginMethod === 'email'" type="login">
+        <div class="common-input">
+          <img :src="MailIcon" class="left-icon" />
+          <div class="input-view">
+            <input placeholder="请输入登录邮箱" v-model="pageData.mailForm.usermail" type="text" class="input" />
+            <p class="err-view"> </p>
+          </div>
+        </div>
+        <div class="common-input">
+          <img :src="PwdIcon" class="left-icon" />
+          <a-input-search
+            v-model:value="pageData.mailForm.captcha"
+            placeholder="请输入验证码"
+            size="middle"
+            enter-button="发送验证码"
+            @search="handleEmailSend"
+          />
+        </div>
+        <div class="next-btn-view">
+          <button class="next-btn btn-active" style="margin: 16px 0px" @click="handleEmailLogin">登录</button>
         </div>
       </div>
       <div class="operation">
@@ -39,27 +58,70 @@
 </template>
 
 <script setup lang="ts">
+  import { ref } from 'vue';
   import { useUserStore } from '/@/store';
   import { message } from 'ant-design-vue';
-  import LogoIcon from '/@/assets/images/k-logo.png';
+  import LogoIcon from '/@/assets/images/logo2.svg';
   import MailIcon from '/@/assets/images/mail-icon.svg';
   import PwdIcon from '/@/assets/images/pwd-icon.svg';
 
   const router = useRouter();
   const userStore = useUserStore();
-
+  const loginMethod = ref('email');
+  //创建响应式对象的一个方法。当使用 reactive 包装一个普通对象时，该对象的所有属性都会变成响应式的
   const pageData = reactive({
     loginForm: {
       username: '',
       password: '',
     },
+    mailForm: {
+      usermail: '',
+      captcha: '',
+    },
   });
 
+  /**
+   * 处理登录逻辑。
+   *
+   * 本函数负责调用userStore中的login方法，传入用户名和密码进行登录操作。
+   * 成功登录后，会执行loginSuccess函数，并打印相关用户信息。
+   * 如果登录失败，会显示错误提示。
+   */
   const handleLogin = () => {
     userStore
       .login({
         username: pageData.loginForm.username,
         password: pageData.loginForm.password,
+      })
+      .then((res) => {
+        loginSuccess();
+        console.log('success==>', userStore.user_name);
+        console.log('success==>', userStore.user_id);
+        console.log('success==>', userStore.user_token);
+      })
+      .catch((err) => {
+        message.warn(err.msg || '登录失败');
+      });
+  };
+
+  const handleEmailSend = () => {
+    userStore
+      .sendcaptcha({ usermail: pageData.mailForm.usermail, sendtype: 'login' })
+      .then((res) => {
+        if (res.code == 200) {
+          message.warn(res.msg || '发送成功');
+        }
+      })
+      .catch((err) => {
+        message.warn(err.msg || '发送失败');
+      });
+  };
+
+  const handleEmailLogin = () => {
+    userStore
+      .verifycaptcha({
+        usermail: pageData.mailForm.usermail,
+        captcha: pageData.mailForm.captcha,
       })
       .then((res) => {
         loginSuccess();
@@ -88,7 +150,7 @@
 
   .container {
     //background-color: #f1f1f1;
-    background-image: url('../../assets/images/00070-2024-07-09_09-31_BArtstyleDB-XL-Kohakuε-v3-11-000025.png');
+    background-image: url('../../../src/assets/images/75df48af78f22e4e8ed33de32d6c56c4.jpg');
     background-size: cover;
     object-fit: cover;
     height: 100%;
@@ -175,8 +237,7 @@
       font-weight: 500;
     }
 
-    .mail-login,
-    .tel-login {
+    .mail-login .tel-login {
       padding: 0 28px;
     }
   }
