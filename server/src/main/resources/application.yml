@@ -1,10 +1,10 @@
 server:
-  port: 9100  # 应用端口号
+  port: 9101  # 应用端口号
   servlet:
     context-path: /api  # 应用的上下文路径
 
 # 全局变量
-BASE_LOCATION: D:\Study\Web_School # 基础路径
+BASE_LOCATION: C:\Users\Administrator\Desktop\SDUWH_2024_Web_School # 基础路径
 DB_NAME: java_jiajiao  # 数据库名称
 
 spring:
