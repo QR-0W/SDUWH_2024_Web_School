@@ -117,27 +117,7 @@
 
 ### 安装
 
-_下面是一个指导你的受众如何安装和配置你的应用的例子。这个模板不需要任何外部依赖或服务。_
-
-1. 在 [https://example.com](https://example.com) 获取一个免费的 API Key。
-
-2. 克隆本仓库
-
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-
-3. 安装 NPM 包
-
-   ```sh
-   npm install
-   ```
-
-4. 在 `config.js` 中填写你的 API
-
-   ```js
-   const API_KEY = '填写你的 API';
-   ```
+（等待补全）
 
 <p align="right">(<a href="#top">返回顶部</a>)</p>
 
@@ -147,7 +127,7 @@ _下面是一个指导你的受众如何安装和配置你的应用的例子。�
 
 ## 使用方法
 
-等待补全
+（等待补全）
 
 <p align="right">(<a href="#top">返回顶部</a>)</p>
 
