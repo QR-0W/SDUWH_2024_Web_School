@@ -69,8 +69,6 @@
   const userStore = useUserStore();
   const loginMethod = ref('email');
 
-  //创建响应式对象的一个方法。当使用 reactive 包装一个普通对象时，该对象的所有属性都会变成响应式的
-
   const pageData = reactive({
     loginForm: {
       username: '',
