@@ -211,7 +211,7 @@
 [issues-shield]: https://img.shields.io/github/issues/QR-0W/SDUWH_2024_Web_School?style=for-the-badge
 [issues-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/issues
 [license-shield]: https://img.shields.io/github/license/QR-0W/SDUWH_2024_Web_School?style=for-the-badge
-[license-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/blob/master/LICENSE.txt
+[license-url]: https://github.com/QR-0W/SDUWH_2024_Web_School/blob/master/license.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
