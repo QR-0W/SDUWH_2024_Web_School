@@ -53,7 +53,7 @@
 //            mMessageHelper = new MimeMessageHelper(mMessage, true);
 //            mMessageHelper.setFrom(from);//发件人邮箱
 //            mMessageHelper.setTo(sendto);//收件人邮箱
-//            mMessageHelper.setSubject("家教管理系统验证码");//邮件的主题
+//            mMessageHelper.setSubject("火蝶家教管理系统验证码");//邮件的主题
 //            mMessageHelper.setText("验证码："+captcha+" 60秒有效");//邮件的文本内容，true表示文本以html格式打开
 //            javaMailSender.send(mMessage);//发送邮件
 //            redisTemplate.boundValueOps(sendto).set(captcha,1, TimeUnit.MINUTES);
