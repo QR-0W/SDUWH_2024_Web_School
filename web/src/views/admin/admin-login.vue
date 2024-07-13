@@ -2,7 +2,9 @@
   <div id="userLayout">
     <div class="user-layout-header">
       <img class="logo" :src="logoImage" alt="">
-      <span>妈妈再也不用担心我的学习-后台管理系统</span>
+
+      <span>火蝶家教-后台管理系统</span>
+
     </div>
     <div class="main-container">
       <div class="main">
@@ -131,8 +133,8 @@ const loginSuccess = () => {
     line-height: 80px;
 
     .logo {
-      width: 36px;
-      height: 36px;
+      width: 48px;
+      height: 48px;
       margin-right: 16px;
       margin-top: -4px;
     }
@@ -140,7 +142,7 @@ const loginSuccess = () => {
 
   .main-container {
     width: 100%;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 200px);
     background-image: url('../../assets/images/117201993_p1.jpg');
     background-position: center;
     background-repeat: no-repeat;

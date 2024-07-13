@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 /**
- * @author lengqin1024(微信)
- * @email net936@163.com
+ *
  */
 @RestController
 @RequestMapping("/tag")

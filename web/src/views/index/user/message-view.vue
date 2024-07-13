@@ -32,28 +32,35 @@
 </template>
 
 <script setup>
-  import { listApi } from '/@/api/notice';
+// 导入API方法
+import { listApi } from "/@/api/notice";
 
-  let loading = ref(false);
-  let msgData = ref([]);
+// 定义响应式变量
+let loading = ref(false); // 加载状态
+let msgData = ref([]); // 消息数据
 
-  onMounted(() => {
-    getMessageList();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getMessageList(); // 获取消息列表
+});
 
-  const getMessageList = () => {
-    loading.value = true;
-    listApi()
-      .then((res) => {
-        msgData.value = res.data;
-        loading.value = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        loading.value = false;
-      });
-  };
+/**
+ * 获取消息列表
+ */
+const getMessageList = () => {
+  loading.value = true; // 设置加载状态为true
+  listApi()
+    .then((res) => {
+      msgData.value = res.data; // 更新消息数据
+      loading.value = false; // 设置加载状态为false
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+      loading.value = false; // 设置加载状态为false
+    });
+};
 </script>
+
 <style scoped lang="less">
   progress {
     vertical-align: baseline;

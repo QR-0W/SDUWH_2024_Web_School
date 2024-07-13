@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { FormInstance, message } from 'ant-design-vue';
-import { createApi, NoticeListApi, updateApi, deleteApi } from '/@/api/notice';
+import { createApi, listApi, updateApi, deleteApi } from '/@/api/notice';
 
 
 const columns = reactive([
@@ -138,7 +138,7 @@ onMounted(() => {
 
 const getDataList = () => {
   data.loading = true;
-  NoticeListApi({
+  listApi({
     keyword: data.keyword,
   })
       .then((res) => {

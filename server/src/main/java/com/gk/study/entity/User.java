@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.Serializable;
 
 @Data
@@ -53,7 +54,6 @@ public class User implements Serializable {
     public String pushEmail;
     @TableField
     public String pushSwitch;
-
 
 
 }

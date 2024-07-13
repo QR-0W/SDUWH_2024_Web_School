@@ -7,16 +7,16 @@
           <div class="item flex-view">
             <div class="label">账号安全等级</div>
             <div class="right-box flex-center flex-view">
-              <div class="safe-text">低风险</div>
+              <div class="safe-text">中风险</div>
               <progress max="3" class="safe-line" value="2"> </progress>
             </div>
           </div>
-          <div class="item flex-view">
-            <div class="label">绑定邮箱</div>
-            <div class="right-box">
-              <input class="input-dom" placeholder="请输入手机号" />
-            </div>
-          </div>
+<!--          <div class="item flex-view">-->
+<!--            <div class="label">绑定手机号</div>-->
+<!--            <div class="right-box">-->
+<!--              <input class="input-dom" placeholder="请输入手机号" />-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
         <div class="edit-pwd-box" style="display;">
           <div class="pwd-edit">
@@ -53,46 +53,58 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
+// 导入必要的模块和工具
+import { message } from "ant-design-vue";
+import { updateUserPwdApi } from "/@/api/user";
+import { useUserStore } from "/@/store";
 
-  import { updateUserPwdApi } from '/@/api/user';
-  import { useUserStore } from '/@/store';
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 定义响应式变量
+let password = ref(''); // 当前密码
+let newPassword1 = ref(''); // 新密码
+let newPassword2 = ref(''); // 确认新密码
 
-  let password = ref('');
-  let newPassword1 = ref('');
-  let newPassword2 = ref('');
+// /**
+//  * 处理绑定手机的操作
+//  */
+// const handleBindMobile = () => {
+//   message.info('功能开发中'); // 显示功能开发中的提示
+// };
 
-  const handleBindMobile = () => {
-    message.info('功能开发中');
-  };
+/**
+ * 处理更新密码的操作
+ */
+const handleUpdatePwd = () => {
+  // 检查是否有空字段
+  if (!password.value || !newPassword1.value || !newPassword2.value) {
+    message.warn('不能为空');
+    return;
+  }
+  // 检查新密码和确认新密码是否一致
+  if (newPassword1.value !== newPassword2.value) {
+    message.warn('密码不一致');
+    return;
+  }
 
-  const handleUpdatePwd = () => {
-    if (!password.value || !newPassword1.value || !newPassword2.value) {
-      message.warn('不能为空');
-      return;
-    }
-    if (newPassword1.value !== newPassword2.value) {
-      message.warn('密码不一致');
-      return;
-    }
-
-    let userId = userStore.user_id;
-    updateUserPwdApi({
-      userId: userId,
-      password: password.value,
-      newPassword: newPassword1.value,
+  let userId = userStore.user_id; // 获取当前用户ID
+  // 调用API更新密码
+  updateUserPwdApi({
+    userId: userId,
+    password: password.value,
+    newPassword: newPassword1.value,
+  })
+    .then((res) => {
+      message.success('修改成功'); // 显示修改成功的消息
     })
-      .then((res) => {
-        message.success('修改成功');
-      })
-      .catch((err) => {
-        message.error(err.msg);
-      });
-  };
+    .catch((err) => {
+      message.error(err.msg || '修改失败'); // 显示修改失败的消息
+    });
+};
 </script>
+
 <style scoped lang="less">
   progress {
     vertical-align: baseline;
@@ -143,7 +155,7 @@
       }
 
       .safe-text {
-        color: #f62a2a;
+        color: #c1bd51;
         font-weight: 600;
         font-size: 14px;
         margin-right: 18px;

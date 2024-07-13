@@ -5,7 +5,7 @@
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">妈妈我全对
+		<div class="logo">火蝶家教
 			<img src="../../../assets/images/logo2.svg"/>
 		</div>
 		<div class="header-right">

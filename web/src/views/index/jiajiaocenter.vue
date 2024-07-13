@@ -14,24 +14,30 @@
     <Footer />
   </div>
 </template>
-<script>
-  import Header from '/@/views/index/components/header.vue';
-  import Footer from '/@/views/index/components/footer.vue';
-  import MineInfosView from '/@/views/index/user/jiajiaoInfosView.vue';
 
-  export default {
-    components: {
-      MineInfosView,
-      Footer,
-      Header,
-    },
-    data() {
-      return {
-        collapsed: false,
-      };
-    },
-  };
+<script>
+// 导入组件
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import MineInfosView from "/@/views/index/user/jiajiaoInfosView.vue";
+
+export default {
+  // 注册组件
+  components: {
+    MineInfosView,
+    Footer,
+    Header,
+  },
+  // 定义组件的数据
+  data() {
+    return {
+      collapsed: false, // 控制侧边栏是否折叠的状态
+    };
+  },
+};
 </script>
+
+
 <style scoped lang="less">
   .user {
     display: block;

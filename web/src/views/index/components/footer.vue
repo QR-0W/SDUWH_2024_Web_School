@@ -24,7 +24,7 @@
       <span>&nbsp;&nbsp;京公网安备123456&nbsp;&nbsp;新出发京零字第东123456号&nbsp;&nbsp;统一社会信用代码 123456789</span>
     </div>
     <!-- 地址信息 -->
-    <div class="address">2022-2023 © 火蝶开发组 · All Rights Reserved</div>
+    <div class="address">2022-2024 © 火蝶家教开发组 · All Rights Reserved</div>
   </div>
 </template>
 
@@ -42,7 +42,7 @@ export default {
     // 打开关于我们页面的方法
     openContactPage() {
       // 在这里设置打开网页的逻辑，例如：
-      window.open("../src/assets/MainPage.html", "_blank");
+      window.open("http://localhost:5174/src/assets/MainPage.html", "_blank");
     }
   }
 };

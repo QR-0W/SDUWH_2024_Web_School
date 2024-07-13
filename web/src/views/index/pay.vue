@@ -70,18 +70,19 @@
 
 
 <script setup lang="ts">
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import { message } from 'ant-design-vue';
-import WxPayIcon from '/@/assets/images/wx-pay-icon.svg';
-import AliPayIcon from '/@/assets/images/ali-pay-icon.svg';
-import { detailApi, listApi as listThingList } from '/@/api/thing';
-import { BASE_URL } from '/@/store/constants';
-import { useRoute, useRouter } from 'vue-router/dist/vue-router';
-import { useUserStore } from '/@/store';
-import { getFormatTime } from '/@/utils';
-import { listApi, userOrderListApi, createApi, deleteApi, cancelApi, cancelUserOrderApi } from '/@/api/order';
+// 导入组件和所需模块
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import { message } from "ant-design-vue";
+import WxPayIcon from "/@/assets/images/wx-pay-icon.svg";
+import AliPayIcon from "/@/assets/images/ali-pay-icon.svg";
+import { detailApi } from "/@/api/thing";
+import { BASE_URL } from "/@/store/constants";
+import { useRoute, useRouter } from "vue-router/dist/vue-router";
+import { useUserStore } from "/@/store";
+import { createApi } from "/@/api/order";
 
+// 获取路由和用户状态存储
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
@@ -105,18 +106,11 @@ let orderData = reactive({
 // 定义一个普通的JavaScript变量 count，用于存储数字类型的数据
 let count = 0;
 
-// 定义一个响应式变量 thingId，初始值为空字符串
+// 定义响应式变量
 let thingId = ref('');
-
-// 定义一个响应式变量 detailData，初始值为空对象
 let detailData = ref({});
-
-// 定义一个响应式变量 ddlTime，初始值未定义
 let ddlTime = ref();
-
-// 定义一个响应式变量 classification_title，初始值为空字符串
 let classification_title = ref('');
-
 
 // 定义 TypeScript 类型，用于类型检查
 interface HTMLElements {
@@ -124,9 +118,7 @@ interface HTMLElements {
   amountSpan: HTMLElement | null;
 }
 
-/**
- * 组件挂载时执行的逻辑
- */
+// 组件挂载时执行的逻辑
 onMounted(() => {
   thingId.value = route.query.id.trim(); // 获取路由参数中的ID
   getThingDetail(); // 获取家教详情信息
@@ -135,7 +127,6 @@ onMounted(() => {
   const elements: HTMLElements = {
     timeCountInput: document.getElementById('timeCountInput') as HTMLInputElement,
     amountSpan: document.getElementById('amountSpan'),
-
   };
 
   // 监听 timeCount 输入框的变化事件，更新支付金额
@@ -150,13 +141,13 @@ onMounted(() => {
   const wxPayElement = document.getElementById('wxPay');
   const aliPayElement = document.getElementById('aliPay');
 
-  //微信支付
+  // 微信支付
   wxPayElement?.addEventListener('click', function () {
     aliPayElement?.classList.remove('choose-box-active');
     wxPayElement?.classList.add('choose-box-active');
   });
 
-  //支付宝支付
+  // 支付宝支付
   aliPayElement?.addEventListener('click', function () {
     wxPayElement?.classList.remove('choose-box-active');
     aliPayElement?.classList.add('choose-box-active');
@@ -175,11 +166,11 @@ const getThingDetail = () => {
       detailData.value = res.data;
       detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
       if (detailData.classificationId == '1') {
-        classification_title = '小学';
+        classification_title.value = '小学';
       } else if (detailData.value.classificationId == '2') {
-        classification_title = '初中';
+        classification_title.value = '初中';
       } else if (detailData.value.classificationId == '3') {
-        classification_title = '高中';
+        classification_title.value = '高中';
       }
       console.log(detailData);
     })
@@ -197,7 +188,7 @@ const getOrderData = (status: String) => {
   let userId = userStore.user_id;
   orderData.form.payTime = new Date().getTime();
   orderData.form.userId = userId;
-  orderData.form.thingId = thingId;
+  orderData.form.thingId = thingId.value;
   orderData.form.status = status;
   orderData.form.count = count;
   orderData.form.price = detailData.value.price;
@@ -205,17 +196,16 @@ const getOrderData = (status: String) => {
   orderData.form.title = detailData.value.title;
 
   let orderForm = new FormData();
-  orderForm.append('status', orderData.form.status);
-  orderForm.append('payTime', orderData.form.payTime);
+  orderForm.append('status', orderData.form.status.toString());
+  orderForm.append('payTime', orderData.form.payTime.toString());
   orderForm.append('userId', orderData.form.userId);
   orderForm.append('thingId', orderData.form.thingId);
-  orderForm.append('count', orderData.form.count);
-  orderForm.append('price', orderData.form.price);
+  orderForm.append('count', orderData.form.count.toString());
+  orderForm.append('price', orderData.form.price.toString());
   orderForm.append('username', orderData.form.username);
   orderForm.append('title', orderData.form.title);
-  orderForm.append('orderTime', orderData.form.orderTime);
+  orderForm.append('orderTime', orderData.form.orderTime.toString());
   return orderForm;
-
 };
 
 /**
@@ -241,11 +231,10 @@ const handleCancle = () => {
     .then((res) => {
       message.success('取消成功，后台审核中');
       let text = router.resolve({ name: 'userOrderView' });
-      //等待3s之后跳转
+      // 等待1s之后跳转
       setTimeout(() => {
         router.push({ name: 'userOrderView' });
-      }, 1000); // 等待1s
-
+      }, 1000);
     })
     .catch((err) => {
       console.log(err);
@@ -263,7 +252,7 @@ const formatDate = (time, format = 'YY-MM-DD hh:mm:ss') => {
 
   const year = date.getFullYear(),
     month = date.getMonth() + 1,
-    day = date.getDate() + 1,
+    day = date.getDate(),
     hour = date.getHours(),
     min = date.getMinutes(),
     sec = date.getSeconds();
@@ -272,16 +261,17 @@ const formatDate = (time, format = 'YY-MM-DD hh:mm:ss') => {
   });
 
   const newTime = format
-    .replace(/YY/g, year)
-    .replace(/MM/g, preArr[month] || month)
-    .replace(/DD/g, preArr[day] || day)
-    .replace(/hh/g, preArr[hour] || hour)
-    .replace(/mm/g, preArr[min] || min)
-    .replace(/ss/g, preArr[sec] || sec);
+    .replace(/YY/g, year.toString())
+    .replace(/MM/g, preArr[month] || month.toString())
+    .replace(/DD/g, preArr[day] || day.toString())
+    .replace(/hh/g, preArr[hour] || hour.toString())
+    .replace(/mm/g, preArr[min] || min.toString())
+    .replace(/ss/g, preArr[sec] || sec.toString());
 
   return newTime;
 };
 </script>
+
 
 <style scoped lang="less">
   .flex-view {

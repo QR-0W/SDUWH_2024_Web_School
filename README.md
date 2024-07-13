@@ -31,8 +31,9 @@
 
 <div align="center">
   <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">
-    <img src="./assets/校徽.png" alt="Logo" width="80" height="80">
+    <img src="./assets/校徽.png" alt="Logo" width="120" height="120">
   </a>
+
 
 <h3 align="center">家教系统</h3>
 
@@ -157,7 +158,9 @@
 - [x] 后端创建 Service - Controller - Mapper 
 - [x] 后端开放前端接口
 - [x] 前端 Ant design 创建界面
-- [ ] 邮箱验证码功能
+- [x] 邮箱验证码功能
+- [ ] 用户头像显示动态更新
+- [ ] 绑定手机号和安全验证
 
 到 [open issues](https://github.com/QR-0W/SDUWH_2024_Web_School/issues) 页查看所有请求的功能 （以及已知的问题）。
 

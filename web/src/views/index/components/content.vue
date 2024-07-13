@@ -80,11 +80,11 @@
 </template>
 
 <script setup>
-import { listApi as listClassificationList } from '/@/api/classification';
-import { listApi as listTagList } from '/@/api/tag';
-import { listApi as listThingList } from '/@/api/thing';
-import { BASE_URL } from '/@/store/constants';
-import { useUserStore } from '/@/store';
+import { listApi as listClassificationList } from "/@/api/classification";
+import { listApi as listTagList } from "/@/api/tag";
+import { listApi as listThingList } from "/@/api/thing";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
 // 获取用户存储
 const userStore = useUserStore();
@@ -206,9 +206,9 @@ const selectTab = (index) => {
  * @param {Object} item 点击的内容项
  */
 const handleDetail = (item) => {
-  let text = router.resolve({ name: 'detail', query: { id: item.id } });
-  window.open(text.href, '_blank');
+  router.push({ name: 'detail', query: { id: item.id } });
 };
+
 
 /**
  * 处理分页切换事件
