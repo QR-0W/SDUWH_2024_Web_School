@@ -144,41 +144,41 @@ import { listApi as listAddressListApi, createApi as createAddressApi } from '/@
 import { useUserStore } from '/@/store';
 
 // 获取路由和用户存储
-const router = useRouter();
-const route = useRoute();
-const userStore = useUserStore();
+const router = useRouter();  // 获取路由对象，用于导航
+const route = useRoute();    // 获取当前路由信息
+const userStore = useUserStore(); // 获取用户状态存储
 
 // 定义页面数据
 const pageData = reactive({
-  id: undefined,
-  title: undefined,
-  cover: undefined,
-  price: undefined,
-  remark: undefined,
-  count: 1,
-  amount: undefined,
-  receiverName: undefined,
-  receiverPhone: undefined,
-  receiverAddress: undefined,
+  id: undefined,             // 商品ID
+  title: undefined,          // 商品标题
+  cover: undefined,          // 商品封面图片
+  price: undefined,          // 商品价格
+  remark: undefined,         // 备注
+  count: 1,                  // 商品数量，默认1
+  amount: undefined,         // 总金额
+  receiverName: undefined,   // 收货人姓名
+  receiverPhone: undefined,  // 收货人电话
+  receiverAddress: undefined,// 收货人地址
 });
 
 // 弹窗数据
 const modal = reactive({
-  visile: false,
-  editFlag: false,
-  title: '',
-  form: {
-    name: undefined,
-    mobile: undefined,
-    desc: undefined,
-    default: undefined,
+  visile: false,             // 弹窗可见性
+  editFlag: false,           // 编辑标志
+  title: '',                 // 弹窗标题
+  form: {                    // 弹窗表单数据
+    name: undefined,         // 收货人姓名
+    mobile: undefined,       // 收货人电话
+    desc: undefined,         // 收货地址描述
+    default: undefined,      // 是否默认地址
   },
-  rules: {
+  rules: {                   // 表单验证规则
     name: [{ required: true, message: '请输入', trigger: 'change' }],
   },
 });
 
-const myform = ref();
+const myform = ref();        // 引用表单对象
 
 // 组件挂载时执行
 onMounted(() => {
@@ -198,9 +198,9 @@ onMounted(() => {
  */
 const handleAdd = () => {
   resetModal();
-  modal.visile = true;
-  modal.editFlag = false;
-  modal.title = '新增';
+  modal.visile = true;     // 显示弹窗
+  modal.editFlag = false;  // 设置编辑标志为false
+  modal.title = '新增';    // 设置弹窗标题为“新增”
   // 重置弹窗表单
   for (const key in modal.form) {
     modal.form[key] = undefined;
@@ -270,9 +270,7 @@ const hideModal = () => {
 };
 
 /**
- *
-
- 更新商品数量和总金额
+ * 更新商品数量和总金额
  * @param {number} value 商品数量
  */
 const onCountChange = (value) => {

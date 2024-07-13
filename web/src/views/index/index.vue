@@ -1,3 +1,4 @@
+//主视图
 <template>
   <router-view />
 </template>
