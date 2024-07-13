@@ -11,7 +11,7 @@
       <!-- 搜索图标 -->
       <img :src="SearchIcon" class="search-icon" />
       <!-- 搜索输入框，按回车触发搜索方法 -->
-      <input ref="keywordRef" placeholder="输入关键词" @keyup.enter="search" />
+      <input ref="keywordRef" placeholder="在此输入家教名来查找" @keyup.enter="search" />
     </div>
     <!-- 右侧操作区域 -->
     <div class="right-view">
