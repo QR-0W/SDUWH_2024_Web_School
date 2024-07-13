@@ -124,11 +124,15 @@
       .then((res) => {
         message.success('保存成功');
         getUserInfo();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500); // 设置延迟时间，单位为毫秒，可以根据需要调整
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
 </script>
 
 <style scoped lang="less">
