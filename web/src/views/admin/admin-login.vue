@@ -2,7 +2,7 @@
   <div id="userLayout">
     <div class="user-layout-header">
       <img class="logo" :src="logoImage" alt="">
-      <span>妈妈再也不用担心我的学习-后台管理系统</span>
+      <span>火蝶家教-后台管理系统</span>
     </div>
     <div class="main-container">
       <div class="main">
