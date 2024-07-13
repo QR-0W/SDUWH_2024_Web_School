@@ -132,4 +132,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("id", userId);
         return userMapper.selectOne(queryWrapper); // 执行查询并返回单条结果
     }
+
+    /**
+     * 根据用户ID获取用户头像
+     *
+     * @param userId 用户ID
+     * @return 返回用户对象，如果不存在则返回null
+     */
+    @Override
+    public User getUserAvatar(String userId) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", userId); // 查询条件修改为id字段
+        return userMapper.selectOne(queryWrapper);
+    }
+
 }
