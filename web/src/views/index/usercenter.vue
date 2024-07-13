@@ -21,9 +21,9 @@
 
   export default {
     components: {
+      Header,
       MineInfosView,
       Footer,
-      Header,
     },
     data() {
       return {
