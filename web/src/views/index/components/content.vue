@@ -206,9 +206,9 @@ const selectTab = (index) => {
  * @param {Object} item 点击的内容项
  */
 const handleDetail = (item) => {
-  let text = router.resolve({ name: 'detail', query: { id: item.id } });
-  window.open(text.href, '_blank');
+  router.push({ name: 'detail', query: { id: item.id } });
 };
+
 
 /**
  * 处理分页切换事件

@@ -11,7 +11,7 @@
       <!-- 搜索图标 -->
       <img :src="SearchIcon" class="search-icon" />
       <!-- 搜索输入框，按回车触发搜索方法 -->
-      <input ref="keywordRef" placeholder="输入关键词" @keyup.enter="search" />
+      <input ref="keywordRef" placeholder="在此输入家教名来查找" @keyup.enter="search" />
     </div>
     <!-- 右侧操作区域 -->
     <div class="right-view">
@@ -21,8 +21,8 @@
       <template v-if="userStore.user_token">
         <a-dropdown>
           <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-            <!-- 用户头像 -->
-            <img :src="AvatarIcon" class="self-img" />
+            <!-- 根据用户是否已登录显示不同的头像 -->
+            <img :src="avatarUrl ? avatarUrl : AvatarIcon" class="self-img" />
           </a>
           <!-- 下拉菜单 -->
           <template #overlay>
@@ -82,17 +82,22 @@
 </template>
 
 <script lang="ts" setup>
-import { NoticeListApi } from "/@/api/notice";
+import { listApi } from "/@/api/notice";
 import { useUserStore } from "/@/store";
 import logoImage from "/@/assets/images/logo2.svg";
 import SearchIcon from "/@/assets/images/search-icon.svg";
 import AvatarIcon from "/@/assets/images/avatar.jpg";
 import MessageIcon from "/@/assets/images/message-icon.svg";
 import { message } from "ant-design-vue";
+import { ref, onMounted } from 'vue';
+import { userAvatarApi } from '/@/api/user';
+
+const userStore = useUserStore();
+const avatarUrl = ref(AvatarIcon); // 初始化为默认头像
 
 const router = useRouter(); // 使用路由实例
 const route = useRoute(); // 使用当前路由信息
-const userStore = useUserStore(); // 使用用户状态管理
+
 
 const keywordRef = ref(); // 搜索关键词引用
 
@@ -101,8 +106,34 @@ let noticeVisible = ref(false); // 消息抽屉可见状态
 let noticeData = ref([] as any); // 消息数据
 
 onMounted(() => {
+  if (userStore.user_id) {
+    getUserAvatar();
+  }
   getNoticeList(); // 组件挂载时获取消息列表
 });
+
+const getUserAvatar = async () => {
+  let userId = userStore.user_id;
+  if (!userId) {
+    console.log("用户ID未定义");
+    return;
+  }
+  console.log("正在获取用户头像，用户ID:", userId); // 调试信息
+  userAvatarApi({ userId: userId })
+    .then((res) => {
+      console.log("头像API返回数据:", res); // 调试信息
+      if (res && res.data) {
+        // 拼接完整的URL
+        avatarUrl.value = `http://127.0.0.1:9101/api/staticfiles/avatar/${res.data}`;
+        console.log("成功获取用户头像:", avatarUrl.value); // 调试信息
+      } else {
+        console.log("未能获取到用户头像数据");
+      }
+    })
+    .catch((err) => {
+      console.log("前端获取头像失败", err); // 调试信息
+    });
+};
 
 /**
  * 获取消息列表的方法
@@ -110,7 +141,7 @@ onMounted(() => {
  */
 const getNoticeList = () => {
   loading.value = true; // 设置加载状态
-  NoticeListApi({})
+  listApi({})
     .then((res) => {
       noticeData.value = res.data; // 设置通知数据
       loading.value = false; // 关闭加载状态
