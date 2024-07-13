@@ -172,7 +172,7 @@ const userRegister = () =>
   .container {
     max-width: 100%;
     //background: #142131;
-    background-image: url('../../assets/images/117201993_p1.jpg');
+    background-image: url('../../assets/images/Image_1715812747861.jpg');
     background-size: cover;
     object-fit: cover;
     height: 100vh;
