@@ -1,41 +1,47 @@
 <template>
   <div>
+    <!-- 头部组件 -->
     <Header />
     <div class="pay-content">
+      <!-- 订单成功提示 -->
       <div class="title">订单生成成功</div>
+      <!-- 支付截止时间提示 -->
       <div class="text time-margin">
         <span>请在 </span>
         <span class="time">{{ ddlTime }}</span>
         <span> 之前付款，超时订单将自动取消</span>
       </div>
-      <a-descriptions title="订单详情" bordered :column="{ xxl: 3, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }">
+      <!-- 订单详情描述 -->
+      <a-descriptions title="订单详情" layout="horizontal" bordered :column="{ xxl: 2, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }" >
         <a-descriptions-item label="家教姓名">{{ detailData.title }}</a-descriptions-item>
         <a-descriptions-item class="state" label="科目">{{ classification_title }}</a-descriptions-item>
         <a-descriptions-item label="价格">{{ detailData.price }}元/小时</a-descriptions-item>
         <a-descriptions-item label="性别">{{ detailData.sex }}</a-descriptions-item>
         <a-descriptions-item label="年龄">{{ detailData.age }}</a-descriptions-item>
         <a-descriptions-item label="地区">{{ detailData.location }}</a-descriptions-item>
-        <a-descriptions-item label="简介">
-          {{ detailData.description }}
-        </a-descriptions-item>
+        <a-descriptions-item label="简介">{{ detailData.description }}</a-descriptions-item>
       </a-descriptions>
 
       <div>
         <div>
           <br />
+          <!-- 时长输入框标签 -->
           <div class="label">时长(小时)</div>
           <br />
+          <!-- 时长输入框 -->
           <div class="timeCountInput-Style">
             <input type="number" id="timeCountInput" placeholder="请输入时长" maxlength="100" class="input-dom web-input" min="1" />
           </div>
         </div>
         <br />
+        <!-- 支付金额显示 -->
         <div class="text">支付金额</div>
         <div class="price">
           <span class="num" id="amountSpan">0</span>
           <span>元</span>
         </div>
       </div>
+      <!-- 支付方式选择 -->
       <div class="pay-choose-view" style="">
         <div class="pay-choose-box flex-view">
           <div id="wxPay" class="choose-box choose-box-active">
@@ -48,6 +54,7 @@
           </div>
         </div>
         <div class="tips">请选择任意一种支付方式</div>
+        <!-- 支付和取消按钮 -->
         <div class="flex-view">
           <button class="pay-btn pay-btn-active" @click="handlePay()">确认支付</button>
           <button class="pay-btn" @click="handleCancle()">取消订单</button>
@@ -56,180 +63,224 @@
     </div>
     <br />
     <br />
+    <!-- 底部组件 -->
     <Footer />
   </div>
 </template>
 
+
 <script setup lang="ts">
-  import Header from '/@/views/index/components/header.vue';
-  import Footer from '/@/views/index/components/footer.vue';
-  import { message } from 'ant-design-vue';
-  import WxPayIcon from '/@/assets/images/wx-pay-icon.svg';
-  import AliPayIcon from '/@/assets/images/ali-pay-icon.svg';
-  import { detailApi, listApi as listThingList } from '/@/api/thing';
-  import { BASE_URL } from '/@/store/constants';
-  import { useRoute, useRouter } from 'vue-router/dist/vue-router';
-  import { useUserStore } from '/@/store';
-  import { getFormatTime } from '/@/utils';
-  import { listApi, userOrderListApi, createApi, deleteApi, cancelApi, cancelUserOrderApi } from '/@/api/order';
+import Header from '/@/views/index/components/header.vue';
+import Footer from '/@/views/index/components/footer.vue';
+import { message } from 'ant-design-vue';
+import WxPayIcon from '/@/assets/images/wx-pay-icon.svg';
+import AliPayIcon from '/@/assets/images/ali-pay-icon.svg';
+import { detailApi, listApi as listThingList } from '/@/api/thing';
+import { BASE_URL } from '/@/store/constants';
+import { useRoute, useRouter } from 'vue-router/dist/vue-router';
+import { useUserStore } from '/@/store';
+import { getFormatTime } from '/@/utils';
+import { listApi, userOrderListApi, createApi, deleteApi, cancelApi, cancelUserOrderApi } from '/@/api/order';
 
-  let orderData = reactive({
-    form: {
-      id: undefined,
-      status: 0,
-      orderTime: 0,
-      payTime: 0,
-      thingId: undefined,
-      userId: undefined,
-      count: 0,
-      price: 0,
-      username: undefined,
-      title: undefined,
-    },
+const router = useRouter();
+const route = useRoute();
+const userStore = useUserStore();
+
+// 定义响应式数据对象，用于存储订单相关信息
+let orderData = reactive({
+  form: {
+    id: undefined,
+    status: 0,
+    orderTime: 0,
+    payTime: 0,
+    thingId: undefined,
+    userId: undefined,
+    count: 0,
+    price: 0,
+    username: undefined,
+    title: undefined,
+  },
+});
+
+// 定义一个普通的JavaScript变量 count，用于存储数字类型的数据
+let count = 0;
+
+// 定义一个响应式变量 thingId，初始值为空字符串
+let thingId = ref('');
+
+// 定义一个响应式变量 detailData，初始值为空对象
+let detailData = ref({});
+
+// 定义一个响应式变量 ddlTime，初始值未定义
+let ddlTime = ref();
+
+// 定义一个响应式变量 classification_title，初始值为空字符串
+let classification_title = ref('');
+
+
+// 定义 TypeScript 类型，用于类型检查
+interface HTMLElements {
+  timeCountInput: HTMLInputElement | null;
+  amountSpan: HTMLElement | null;
+}
+
+/**
+ * 组件挂载时执行的逻辑
+ */
+onMounted(() => {
+  thingId.value = route.query.id.trim(); // 获取路由参数中的ID
+  getThingDetail(); // 获取家教详情信息
+
+  // 获取 DOM 元素
+  const elements: HTMLElements = {
+    timeCountInput: document.getElementById('timeCountInput') as HTMLInputElement,
+    amountSpan: document.getElementById('amountSpan'),
+
+  };
+
+  // 监听 timeCount 输入框的变化事件，更新支付金额
+  elements.timeCountInput?.addEventListener('change', function () {
+    const timeCount: number = parseInt(elements.timeCountInput?.value || '0');
+    const amount: number = timeCount * parseInt(detailData.value.price);
+    count = amount;
+    elements.amountSpan!.textContent = amount.toString();
   });
 
-  const router = useRouter();
-  const route = useRoute();
-  const userStore = useUserStore();
+  // 获取支付方式元素，并添加点击事件监听器
+  const wxPayElement = document.getElementById('wxPay');
+  const aliPayElement = document.getElementById('aliPay');
 
-  let count: Number = 0;
-  let thingId = ref('');
-  let detailData = ref({});
-  let ddlTime = ref();
-  let classification_title = ref('');
-
-  // 定义 TypeScript 类型
-  interface HTMLElements {
-    timeCountInput: HTMLInputElement | null;
-    amountSpan: HTMLElement | null;
-  }
-
-  onMounted(() => {
-    thingId.value = route.query.id.trim();
-    getThingDetail();
-
-    // 获取 DOM 元素
-    const elements: HTMLElements = {
-      timeCountInput: document.getElementById('timeCountInput') as HTMLInputElement,
-      amountSpan: document.getElementById('amountSpan'),
-    };
-    // 监听 timeCount 输入框的变化事件
-    elements.timeCountInput?.addEventListener('change', function () {
-      const timeCount: number = parseInt(elements.timeCountInput?.value || '0');
-      const amount: number = timeCount * parseInt(detailData.value.price);
-      count = amount;
-      elements.amountSpan!.textContent = amount.toString();
-    });
-
-    // 获取支付方式元素
-    const wxPayElement = document.getElementById('wxPay');
-    const aliPayElement = document.getElementById('aliPay');
-    // 添加点击事件监听器
-    wxPayElement?.addEventListener('click', function () {
-      // 移除之前选中的支付方式的样式
-      aliPayElement?.classList.remove('choose-box-active');
-      // 添加当前选中的支付方式的样式
-      wxPayElement?.classList.add('choose-box-active');
-    });
-
-    aliPayElement?.addEventListener('click', function () {
-      // 移除之前选中的支付方式的样式
-      wxPayElement?.classList.remove('choose-box-active');
-      // 添加当前选中的支付方式的样式
-      aliPayElement?.classList.add('choose-box-active');
-    });
-    orderData.form.orderTime = new Date().getTime();
-    ddlTime.value = formatDate(new Date().getTime(), 'YY-MM-DD hh:mm:ss');
+  //微信支付
+  wxPayElement?.addEventListener('click', function () {
+    aliPayElement?.classList.remove('choose-box-active');
+    wxPayElement?.classList.add('choose-box-active');
   });
 
-  const getThingDetail = () => {
-    detailApi({ id: thingId.value })
-      .then((res) => {
-        detailData.value = res.data;
-        detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
-        if (detailData.classificationId == '1') {
-          classification_title = '小学';
-        } else if (detailData.value.classificationId == '2') {
-          classification_title = '初中';
-        } else if (detailData.value.classificationId == '3') {
-          classification_title = '高中';
-        }
-        console.log(detailData);
-      })
-      .catch((err) => {
-        message.error('获取详情失败');
-      });
-  };
+  //支付宝支付
+  aliPayElement?.addEventListener('click', function () {
+    wxPayElement?.classList.remove('choose-box-active');
+    aliPayElement?.classList.add('choose-box-active');
+  });
 
-  const getOrderData = (status: String) => {
-    let userId = userStore.user_id;
-    orderData.form.payTime = new Date().getTime();
-    orderData.form.userId = userId;
-    orderData.form.thingId = thingId;
-    orderData.form.status = status;
-    orderData.form.count = count;
-    orderData.form.price = detailData.value.price;
-    orderData.form.username = userStore.user_name;
-    orderData.form.title = detailData.value.title;
+  orderData.form.orderTime = new Date().getTime(); // 设置订单时间
+  ddlTime.value = formatDate(new Date().getTime(), 'YY-MM-DD hh:mm:ss'); // 设置支付截止时间
+});
 
-    let orderForm = new FormData();
-    orderForm.append('status', orderData.form.status);
-    orderForm.append('payTime', orderData.form.payTime);
-    orderForm.append('userId', orderData.form.userId);
-    orderForm.append('thingId', orderData.form.thingId);
-    orderForm.append('count', orderData.form.count);
-    orderForm.append('price', orderData.form.price);
-    orderForm.append('username', orderData.form.username);
-    orderForm.append('title', orderData.form.title);
-    orderForm.append('orderTime', orderData.form.orderTime);
-    return orderForm;
-  };
-
-  const handlePay = () => {
-    createApi(getOrderData('2'))
-      .then((res) => {
-        message.success('保存成功，后台审核中');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    let text = router.resolve({ name: 'userOrderView' });
-    window.open(text.href, '_blank');
-  };
-
-  const handleCancle = () => {
-    createApi(getOrderData('7'))
-      .then((res) => {
-        message.success('保存成功，后台审核中');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const formatDate = (time, format = 'YY-MM-DD hh:mm:ss') => {
-    const date = new Date(time);
-
-    const year = date.getFullYear(),
-      month = date.getMonth() + 1,
-      day = date.getDate() + 1,
-      hour = date.getHours(),
-      min = date.getMinutes(),
-      sec = date.getSeconds();
-    const preArr = Array.apply(null, Array(10)).map(function (elem, index) {
-      return '0' + index;
+/**
+ * 获取家教详情信息
+ */
+const getThingDetail = () => {
+  detailApi({ id: thingId.value })
+    .then((res) => {
+      detailData.value = res.data;
+      detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
+      if (detailData.classificationId == '1') {
+        classification_title = '小学';
+      } else if (detailData.value.classificationId == '2') {
+        classification_title = '初中';
+      } else if (detailData.value.classificationId == '3') {
+        classification_title = '高中';
+      }
+      console.log(detailData);
+    })
+    .catch((err) => {
+      message.error('获取详情失败');
     });
+};
 
-    const newTime = format
-      .replace(/YY/g, year)
-      .replace(/MM/g, preArr[month] || month)
-      .replace(/DD/g, preArr[day] || day)
-      .replace(/hh/g, preArr[hour] || hour)
-      .replace(/mm/g, preArr[min] || min)
-      .replace(/ss/g, preArr[sec] || sec);
+/**
+ * 获取订单数据
+ * @param {String} status 订单状态
+ * @returns {FormData} 订单表单数据
+ */
+const getOrderData = (status: String) => {
+  let userId = userStore.user_id;
+  orderData.form.payTime = new Date().getTime();
+  orderData.form.userId = userId;
+  orderData.form.thingId = thingId;
+  orderData.form.status = status;
+  orderData.form.count = count;
+  orderData.form.price = detailData.value.price;
+  orderData.form.username = userStore.user_name;
+  orderData.form.title = detailData.value.title;
 
-    return newTime;
-  };
+  let orderForm = new FormData();
+  orderForm.append('status', orderData.form.status);
+  orderForm.append('payTime', orderData.form.payTime);
+  orderForm.append('userId', orderData.form.userId);
+  orderForm.append('thingId', orderData.form.thingId);
+  orderForm.append('count', orderData.form.count);
+  orderForm.append('price', orderData.form.price);
+  orderForm.append('username', orderData.form.username);
+  orderForm.append('title', orderData.form.title);
+  orderForm.append('orderTime', orderData.form.orderTime);
+  return orderForm;
+
+};
+
+/**
+ * 处理支付操作
+ */
+const handlePay = () => {
+  createApi(getOrderData('2'))
+    .then((res) => {
+      message.success('保存成功，后台审核中');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  let text = router.resolve({ name: 'userOrderView' });
+  window.open(text.href, '_blank');
+};
+
+/**
+ * 处理取消订单操作
+ */
+const handleCancle = () => {
+  createApi(getOrderData('7'))
+    .then((res) => {
+      message.success('取消成功，后台审核中');
+      let text = router.resolve({ name: 'userOrderView' });
+      //等待3s之后跳转
+      setTimeout(() => {
+        router.push({ name: 'userOrderView' });
+      }, 1000); // 等待1s
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+/**
+ * 格式化日期时间
+ * @param {number} time 时间戳
+ * @param {string} format 日期时间格式
+ * @returns {string} 格式化后的日期时间字符串
+ */
+const formatDate = (time, format = 'YY-MM-DD hh:mm:ss') => {
+  const date = new Date(time);
+
+  const year = date.getFullYear(),
+    month = date.getMonth() + 1,
+    day = date.getDate() + 1,
+    hour = date.getHours(),
+    min = date.getMinutes(),
+    sec = date.getSeconds();
+  const preArr = Array.apply(null, Array(10)).map(function (elem, index) {
+    return '0' + index;
+  });
+
+  const newTime = format
+    .replace(/YY/g, year)
+    .replace(/MM/g, preArr[month] || month)
+    .replace(/DD/g, preArr[day] || day)
+    .replace(/hh/g, preArr[hour] || hour)
+    .replace(/mm/g, preArr[min] || min)
+    .replace(/ss/g, preArr[sec] || sec);
+
+  return newTime;
+};
 </script>
 
 <style scoped lang="less">
