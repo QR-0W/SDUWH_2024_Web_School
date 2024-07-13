@@ -353,7 +353,7 @@ const handleOrder = (detailData) => {
 };
 
 /**
- * 获取推荐的事物列表
+ * 获取推荐的家教列表
  */
 const getRecommendThing = () => {
   listThingList({ sort: 'recommend' })

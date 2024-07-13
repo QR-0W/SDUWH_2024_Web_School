@@ -186,11 +186,13 @@ const selectTab = (index) => {
 
   if (index == 1) {
     sort = 'hot';
-  } else if (index == 2) {
-    sort = 'recommend';
-  } else if (index == 3) {
-    sort = 'loc';
   }
+  else if (index == 2) {
+    sort = 'recommend';
+  }
+  // else if (index == 3) {
+  //   sort = 'loc';
+  // }
 
   const data = { sort: sort };
   if (contentData.selectTagId !== -1) {
