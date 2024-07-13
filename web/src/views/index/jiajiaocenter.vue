@@ -1,45 +1,42 @@
 <template>
-    <div class="user">
-  
-      <Header />
-  
-      <div class="user-content">
-        <div class="user-content-left">
-          <MineInfosView />
-        </div>
-        <div class="user-content-right">
-          <router-view />
-        </div>
+  <div class="user">
+    <Header />
+
+    <div class="user-content">
+      <div class="user-content-left">
+        <MineInfosView />
       </div>
-  
-      <Footer />
-  
+      <div class="user-content-right">
+        <router-view />
+      </div>
     </div>
-  </template>
-  <script>
-  import Header from '/@/views/index/components/header.vue'
-  import Footer from '/@/views/index/components/footer.vue'
-  import MineInfosView from '/@/views/index/user/jiajiaoInfosView.vue'
-  
+
+    <Footer />
+  </div>
+</template>
+<script>
+  import Header from '/@/views/index/components/header.vue';
+  import Footer from '/@/views/index/components/footer.vue';
+  import MineInfosView from '/@/views/index/user/jiajiaoInfosView.vue';
+
   export default {
     components: {
       MineInfosView,
       Footer,
-      Header
+      Header,
     },
-    data () {
+    data() {
       return {
-        collapsed: false
-      }
-    }
-  }
-  </script>
-  <style scoped lang="less">
-  
+        collapsed: false,
+      };
+    },
+  };
+</script>
+<style scoped lang="less">
   .user {
     display: block;
   }
-  
+
   .user-content {
     display: flex;
     flex-direction: row;
@@ -49,11 +46,9 @@
     margin: 80px auto;
     .user-content-left {
     }
-    .user-content-right{
-       flex: 1;
+    .user-content-right {
+      flex: 1;
       padding-right: 20px;
     }
-  
   }
-  </style>
-  
+</style>

@@ -4,7 +4,7 @@
     <div class="page-view">
       <div class="table-operations">
         <a-space>
-<!--          <a-button type="primary" @click="handleAdd">模拟新增</a-button>-->
+          <!--          <a-button type="primary" @click="handleAdd">模拟新增</a-button>-->
           <a-button @click="handleBatchDelete">批量删除</a-button>
         </a-space>
       </div>
@@ -27,8 +27,8 @@
       >
         <template #bodyCell="{ text, record, index, column }">
           <template v-if="column.key === 'status'">
-            <a-tag :color="text === '2'? '#2db7f5':'#87d068'">
-              {{text === '2'? '已支付':'已取消'}}
+            <a-tag :color="text === '2' ? '#2db7f5' : '#87d068'">
+              {{ text === '2' ? '已支付' : '已取消' }}
             </a-tag>
           </template>
           <template v-if="column.key === 'operation'">
@@ -45,49 +45,47 @@
         </template>
       </a-table>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
   import { FormInstance, message } from 'ant-design-vue';
   import { createApi, listApi, updateApi, deleteApi, cancelApi } from '/@/api/order';
-  import {getFormatTime} from "/@/utils";
-
+  import { getFormatTime } from '/@/utils';
 
   const columns = reactive([
     {
       title: '序号',
       dataIndex: 'index',
       key: 'index',
-      align: 'center'
+      align: 'center',
     },
     {
       title: '用户',
       dataIndex: 'username',
       key: 'username',
-      align: 'center'
+      align: 'center',
     },
     {
       title: '商品',
       dataIndex: 'title',
       key: 'title',
       align: 'center',
-      customRender: ({text}) => text ? text.substring(0, 10) + '...' : '--'
+      customRender: ({ text }) => (text ? text.substring(0, 10) + '...' : '--'),
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       align: 'center',
-      scopedSlots: {customRender: 'status'}
+      scopedSlots: { customRender: 'status' },
     },
     {
       title: '订单时间',
       dataIndex: 'orderTime',
       key: 'orderTime',
       align: 'center',
-      customRender: ({text}) => getFormatTime(text, true)
+      customRender: ({ text }) => getFormatTime(text, true),
     },
     {
       title: '操作',
@@ -108,7 +106,6 @@
     pageSize: 10,
     page: 1,
   });
-
 
   onMounted(() => {
     getDataList();
@@ -133,7 +130,6 @@
       });
   };
 
-
   const rowSelection = ref({
     onChange: (selectedRowKeys: (string | number)[], selectedRows: DataItem[]) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -143,13 +139,13 @@
 
   const confirmCancel = (record: any) => {
     cancelApi({ id: record.id })
-        .then((res) => {
-          getDataList();
-          message.success('取消成功')
-        })
-        .catch((err) => {
-          message.error(err.msg || '操作失败');
-        });
+      .then((res) => {
+        getDataList();
+        message.success('取消成功');
+      })
+      .catch((err) => {
+        message.error(err.msg || '操作失败');
+      });
   };
 
   const confirmDelete = (record: any) => {
@@ -173,7 +169,7 @@
     // }).catch(err => {
     //
     // })
-  }
+  };
 
   const handleBatchDelete = () => {
     console.log(data.selectedRowKeys);
@@ -192,7 +188,6 @@
         message.error(err.msg || '操作失败');
       });
   };
-
 </script>
 
 <style scoped lang="less">

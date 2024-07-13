@@ -1,15 +1,18 @@
 <template>
+  <!-- 详情页面的主要容器 -->
   <div class="detail">
+    <!-- 引入头部组件 -->
     <Header />
-
     <div class="detail-content">
       <div class="detail-content-top">
         <div style="position: relative">
           <div class="thing-infos-view">
             <div class="thing-infos">
+              <!-- 展示事物图片 -->
               <div class="thing-img-box">
                 <img :src="detailData.cover" />
               </div>
+              <!-- 展示事物信息 -->
               <div class="thing-info-box">
                 <div class="thing-state">
                   <span class="state hidden-sm">信息状态</span>
@@ -20,22 +23,27 @@
                   <span class="a-price-symbol"></span>
                   <span class="a-price" style="font-size: 20px">{{ detailData.price }}元/时</span>
                 </span>
+                <!-- 展示年级信息 -->
                 <div class="translators flex-view" style="">
                   <span>年级:</span>
                   <span class="name">{{ classification_title }}</span>
                 </div>
+                <!-- 展示性别信息 -->
                 <div class="translators flex-view" style="">
                   <span>性别：</span>
                   <span class="name">{{ detailData.sex }}</span>
                 </div>
+                <!-- 展示年龄信息 -->
                 <div class="translators flex-view" style="">
                   <span>年龄：</span>
                   <span class="name">{{ detailData.age }}岁</span>
                 </div>
+                <!-- 展示地区信息 -->
                 <div class="translators flex-view" style="">
                   <span>地区：</span>
                   <span class="name">{{ detailData.location }}</span>
                 </div>
+                <!-- 如果当前用户不是发布者，显示联系和下单按钮 -->
                 <div v-if="route.query.id.trim() != userStore.user_id" class="flex-view">
                   <button class="buy-btn" @click="handleOrder(detailData)">
                     <img :src="AddIcon" />
@@ -48,6 +56,7 @@
                 </div>
               </div>
             </div>
+            <!-- 展示心愿单、收藏和分享功能 -->
             <div class="thing-counts hidden-sm">
               <div class="count-item flex-view pointer" @click="addToWish()">
                 <div class="count-img">
@@ -93,10 +102,12 @@
           </div>
         </div>
       </div>
+      <!-- 详情页面的底部内容，包括简介和评论 -->
       <div class="detail-content-bottom">
         <div class="thing-content-view flex-view">
           <div class="main-content">
             <div class="order-view main-tab">
+              <!-- 选项卡导航 -->
               <span
                 class="tab"
                 :class="selectTabIndex === index ? 'tab-select' : ''"
@@ -109,12 +120,12 @@
               <span :style="{ left: tabUnderLeft + 'px' }" class="tab-underline"></span>
             </div>
 
-            <!--简介-->
+            <!-- 简介内容 -->
             <div class="thing-intro" :class="selectTabIndex <= 0 ? '' : 'hide'">
               <p class="text" style="">{{ detailData.description }}</p>
             </div>
 
-            <!--评论-->
+            <!-- 评论内容 -->
             <div class="thing-comment" :class="selectTabIndex > 0 ? '' : 'hide'">
               <div class="title">发表新的评论</div>
               <div class="publish flex-view">
@@ -131,6 +142,7 @@
                 </div>
               </div>
               <div class="comments-list">
+                <!-- 评论列表 -->
                 <div class="comment-item" v-for="item in commentData">
                   <div class="flex-item flex-view">
                     <img :src="AvatarIcon" class="avator" />
@@ -156,6 +168,7 @@
               </div>
             </div>
           </div>
+          <!-- 热门推荐内容 -->
           <div class="recommend" style="">
             <div class="title">热门推荐</div>
             <div class="things">
@@ -178,11 +191,13 @@
       </div>
     </div>
 
+    <!-- 引入页脚组件 -->
     <Footer />
   </div>
-
 </template>
+
 <script setup>
+  // 导入所需模块和组件
   import { message, Modal } from 'ant-design-vue';
   import Header from '/@/views/index/components/header.vue';
   import Footer from '/@/views/index/components/footer.vue';
@@ -201,6 +216,7 @@
   import { useUserStore } from '/@/store';
   import { getFormatTime } from '/@/utils';
 
+  // 初始化变量和状态
   const router = useRouter();
   const route = useRoute();
   const userStore = useUserStore();
@@ -219,6 +235,7 @@
 
   let commentRef = ref();
 
+  // 页面加载时获取详情、推荐和评论数据
   onMounted(() => {
     thingId.value = route.query.id.trim();
     getThingDetail();
@@ -226,11 +243,13 @@
     getCommentList();
   });
 
+  // 切换选项卡
   const selectTab = (index) => {
     selectTabIndex.value = index;
     tabUnderLeft.value = 6 + 54 * index;
   };
 
+  // 获取事物详情数据
   const getThingDetail = () => {
     detailApi({ id: thingId.value })
       .then((res) => {
@@ -252,12 +271,14 @@
       });
   };
 
+  // 创建订单
   const createOrder = () => {
     // 跳转新页面
     let text = router.resolve({ name: 'pay', query: { id: thingId.value } });
     window.open(text.href, '_blank');
   };
 
+  // 加入心愿单
   const addToWish = () => {
     let userId = userStore.user_id;
     if (userId) {
@@ -273,6 +294,8 @@
       message.warn('请先登录');
     }
   };
+
+  // 收藏功能
   const collect = () => {
     let userId = userStore.user_id;
     if (userId) {
@@ -288,11 +311,15 @@
       message.warn('请先登录');
     }
   };
+
+  // 分享功能
   const share = () => {
     let content = '分享一个非常好玩的网站 ' + window.location.href;
     let shareHref = 'http://service.weibo.com/share/share.php?title=' + content;
     window.open(shareHref);
   };
+
+  // 处理立即联系按钮的点击事件
   const handleOrder = (detailData) => {
     console.log(detailData);
     const userId = userStore.user_id;
@@ -307,6 +334,8 @@
       message.warn('请先登录！');
     }
   };
+
+  // 获取推荐的事物列表
   const getRecommendThing = () => {
     listThingList({ sort: 'recommend' })
       .then((res) => {
@@ -322,11 +351,15 @@
         console.log(err);
       });
   };
+
+  // 处理详情页面的点击事件
   const handleDetail = (item) => {
     // 跳转新页面
     let text = router.resolve({ name: 'detail', query: { id: item.id } });
     window.open(text.href, '_blank');
   };
+
+  // 发送评论
   const sendComment = () => {
     console.log(commentRef.value);
     let text = commentRef.value.value.trim();
@@ -349,6 +382,8 @@
       router.push({ name: 'login' });
     }
   };
+
+  // 点赞评论
   const like = (commentId) => {
     likeApi({ id: commentId })
       .then((res) => {
@@ -358,6 +393,8 @@
         console.log(err);
       });
   };
+
+  // 获取评论列表
   const getCommentList = () => {
     listThingCommentsApi({ thingId: thingId.value, order: order.value })
       .then((res) => {
@@ -370,6 +407,8 @@
         console.log(err);
       });
   };
+
+  // 切换评论排序方式
   const sortCommentList = (sortType) => {
     if (sortType === 'recent') {
       sortIndex.value = 0;

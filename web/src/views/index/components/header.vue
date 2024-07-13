@@ -45,19 +45,19 @@
       </template>
 
       <!-- 消息图标，点击打开消息抽屉 -->
-      <div v-if="userStore.user_token" class="right-icon" @click="msgVisible = true">
+      <div v-if="userStore.user_token" class="right-icon" @click="noticeVisible = true">
         <img :src="MessageIcon" />
         <span class="msg-point" style=""></span>
       </div>
       <!-- 消息抽屉 -->
       <div v-if="userStore.user_token">
-        <a-drawer title="我的消息" placement="right" :closable="true" :maskClosable="true" :visible="msgVisible" @close="onClose">
+        <a-drawer title="我的消息" placement="right" :closable="true" :maskClosable="true" :visible="noticeVisible" @close="onClose">
           <a-spin :spinning="loading" style="min-height: 200px">
             <div class="list-content">
               <div class="notification-view">
                 <div class="list">
                   <!-- 消息列表 -->
-                  <div class="notification-item flex-view" v-for="item in msgData">
+                  <div class="notification-item flex-view" v-for="item in noticeData">
                     <div class="content-box">
                       <div class="header">
                         <span class="title-txt">{{ item.title }}</span>
@@ -81,89 +81,115 @@
 </template>
 
 <script setup lang="ts">
-  import { listApi } from '/@/api/notice';
-  import { useUserStore } from '/@/store';
-  import logoImage from '/@/assets/images/logo2.svg';
-  import SearchIcon from '/@/assets/images/search-icon.svg';
-  import AvatarIcon from '/@/assets/images/avatar.jpg';
-  import MessageIcon from '/@/assets/images/message-icon.svg';
-  import { message } from 'ant-design-vue';
+import { NoticeListApi } from '/@/api/notice';
+import { useUserStore } from '/@/store';
+import logoImage from '/@/assets/images/logo2.svg';
+import SearchIcon from '/@/assets/images/search-icon.svg';
+import AvatarIcon from '/@/assets/images/avatar.jpg';
+import MessageIcon from '/@/assets/images/message-icon.svg';
+import { message } from 'ant-design-vue';
 
-  const router = useRouter(); // 使用路由实例
-  const route = useRoute(); // 使用当前路由信息
-  const userStore = useUserStore(); // 使用用户状态管理
+const router = useRouter(); // 使用路由实例
+const route = useRoute(); // 使用当前路由信息
+const userStore = useUserStore(); // 使用用户状态管理
 
-  const keywordRef = ref(); // 搜索关键词引用
+const keywordRef = ref(); // 搜索关键词引用
 
-  let loading = ref(false); // 加载状态
-  let msgVisible = ref(false); // 消息抽屉可见状态
-  let msgData = ref([] as any); // 消息数据
+let loading = ref(false); // 加载状态
+let noticeVisible = ref(false); // 消息抽屉可见状态
+let noticeData = ref([] as any); // 消息数据
 
-  onMounted(() => {
-    getMessageList(); // 组件挂载时获取消息列表
-  });
+onMounted(() => {
+  getNoticeList(); // 组件挂载时获取消息列表
+});
 
-  // 获取消息列表的方法
-  const getMessageList = () => {
-    loading.value = true;
-    listApi({})
-      .then((res) => {
-        msgData.value = res.data;
-        loading.value = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        loading.value = false;
-      });
-  };
-
-  // 搜索方法
-  const search = () => {
-    const keyword = keywordRef.value.value;
-    if (route.name === 'search') {
-      router.push({ name: 'search', query: { keyword: keyword } });
-    } else {
-      let text = router.resolve({ name: 'search', query: { keyword: keyword } });
-      window.open(text.href, '_blank');
-    }
-  };
-
-  // 跳转到登录页面
-  const goLogin = () => {
-    router.push({ name: 'login' });
-  };
-
-  // 跳转到用户中心页面
-  const goUserCenter = () => {
-    console.log(userStore.user_role);
-    if (userStore.user_role === '1' || userStore.user_role === '2') {
-      router.push({ name: 'userInfoEditView' });
-    } else if (userStore.user_role === '5') {
-      router.push({ name: 'jiajiaoOrderView' });
-    }
-  };
-
-  // 退出登录方法
-  const quit = () => {
-    userStore.logout().then((res) => {
-      router.push({ name: 'portal' });
+/**
+ * 获取消息列表的方法
+ * 获取通知列表并设置加载状态
+ */
+const getNoticeList = () => {
+  loading.value = true; // 设置加载状态
+  NoticeListApi({})
+    .then((res) => {
+      noticeData.value = res.data; // 设置通知数据
+      loading.value = false; // 关闭加载状态
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+      loading.value = false; // 关闭加载状态
     });
-  };
+};
 
-  // 关闭消息抽屉
-  const onClose = () => {
-    msgVisible.value = false;
-  };
+/**
+ * 搜索方法
+ * 根据输入框中的关键词执行搜索
+ */
+const search = () => {
+  const keyword = keywordRef.value.value; // 获取输入框中的关键词
+  if (route.name === 'search') {
+    // 如果当前路由已经是 search 页，直接 push 新的查询参数
+    router.push({ name: 'search', query: { keyword: keyword } });
+  } else {
+    // 如果当前路由不是 search 页，生成一个新的 URL 并打开新页面
+    let text = router.resolve({ name: 'search', query: { keyword: keyword } });
+    window.open(text.href, '_blank');
+  }
+};
 
-  // 处理家教入驻方法
-  const handleJoin = () => {
-    let userId = userStore.user_id;
-    if (userId) {
-      router.push({ name: 'jiajiaoRegister' });
-    } else {
-      message.warn('请先登录！');
-    }
-  };
+/**
+ * 跳转到登录页面
+ * 使用路由推送到登录页面
+ */
+const goLogin = () => {
+  router.push({ name: 'login' });
+};
+
+/**
+ * 跳转到用户中心页面
+ * 根据用户角色跳转到相应的用户中心页面
+ */
+const goUserCenter = () => {
+  console.log(userStore.user_role); // 打印用户角色
+  router.push({ name: 'userInfoEditView' });
+  // if (userStore.user_role === '1' || userStore.user_role === '2') {
+  //   router.push({ name: 'userInfoEditView' });
+  // } else if (userStore.user_role === '5') {
+  //   router.push({ name: 'jiajiaoOrderView' });
+  // }
+};
+
+/**
+ * 退出登录方法
+ * 执行用户登出并跳转到门户页面
+ */
+const quit = () => {
+  userStore.logout().then((res) => {
+    router.push({ name: 'portal' });
+  });
+};
+
+/**
+ * 关闭消息抽屉
+ * 设置通知抽屉的可见状态为 false
+ */
+const onClose = () => {
+  noticeVisible.value = false;
+};
+
+/**
+ * 处理家教入驻方法
+ * 判断用户是否已登录，若已登录则跳转到家教注册页面，否则显示提示信息
+ */
+const handleJoin = () => {
+  let userId = userStore.user_id;
+  if (userId) {
+    router.push({ name: 'jiajiaoRegister' });
+  } else {
+    message.warn('请先登录！');
+  }
+};
+
+
 </script>
 
 <style scoped lang="less">
