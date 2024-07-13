@@ -88,9 +88,9 @@
 
 ## 关于本项目
 
+![img](README.assets/屏幕截图_13-7-2024_204322_192.168.31.59.jpeg)
+
 本项目为家教信息管理平台，提供家教选择，信息管理等功能。
-
-
 
 
 
@@ -98,6 +98,7 @@
 
 * [Vue.js](https://vuejs.org/)
 * [Bootstrap](https://getbootstrap.com)
+* JDK 1.8
 
 
 
@@ -122,21 +123,50 @@
 
 ## 开始
 
-这是一份在本地构建项目的指导的例子。要获取本地副本并且配置运行，你可以按照下面的示例步骤操作。
+这是一份在本地构建项目的指导的例子。
+
+要获取本地副本并且配置运行，你可以按照下面的示例步骤操作。
+
+
 
 ### 依赖
 
-这只是一个列出软件依赖和安装方法的例子。
-
-（等待补全）
+- Ant design
+- Axios
+- Echarts
+- Element-plus
+- Pinia
+- Vite
+- JDK 1.8
+- Maven
+- Spring
+- Spring MVC
+- Springboot 
+- MyBatis
+- Druid
+- MySQL
+- Redis
+- Servlet
 
 
 
 ### 安装
 
-（等待补全）
+#### 后端
 
+- 配置依赖项
 
+- 配置后端端口、DB_NAME、BASE_LOCATION，位于 `application.yml`
+
+- 修改 LOG_HOME 的 value 值，位于 `logback-spring.xml`
+
+- 配置 JDK
+
+  
+
+#### 前端
+
+- 配置依赖项
 
 
 
@@ -144,9 +174,7 @@
 
 ## 使用方法
 
-（等待补全）
-
-
+启动后端项目，在前端根目录下运行 `npm run dev` ，启动网页。
 
 
 
@@ -155,16 +183,14 @@
 ## 路线图
 
 - [x] 数据库创建
-- [x] 后端创建 Service - Controller - Mapper 
-- [x] 后端开放前端接口
-- [x] 前端 Ant design 创建界面
-- [x] 邮箱验证码功能
-- [ ] 用户头像显示动态更新
+- [x] 后端创建 Service - Controller - Mapper 层
+- [x] 后端开放接口
+- [x] 前端利用Vue +Ant design创建基础界面
+- [x] 实现邮箱验证码功能
+- [x] 用户头像显示动态更新
 - [ ] 绑定手机号和安全验证
 
 到 [open issues](https://github.com/QR-0W/SDUWH_2024_Web_School/issues) 页查看所有请求的功能 （以及已知的问题）。
-
-
 
 
 
@@ -184,15 +210,11 @@
 
 
 
-
-
 <!-- 许可证 -->
 
 ## 许可证
 
 打开 [LICENSE.txt](LICENSE.txt) 查看更多内容。
-
-
 
 
 
@@ -204,18 +226,12 @@
 
 
 
-
-
 <!-- 致谢 -->
 
 ## 致谢
 
-* [othneildrew](https://github.com/othneildrew/Best-README-Template)
-* [Choose an Open Source License](https://choosealicense.com)
-
-  
-
-
+* [othneildrew README Template](https://github.com/othneildrew/Best-README-Template)
+* [ChatGPT](https://chatgpt.com/)
 
 
 
