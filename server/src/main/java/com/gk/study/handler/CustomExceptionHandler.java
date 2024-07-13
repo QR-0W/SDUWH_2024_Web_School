@@ -56,3 +56,7 @@ public class CustomExceptionHandler {
         service.createErrorLog(log);
     }
 }
+/*
+这段代码是一个使用Spring框架的@RestControllerAdvice注解来全局处理异常的示例。
+它定义了一个CustomExceptionHandler类，用于捕获并处理所有通过Spring MVC框架抛出的异常。
+ */
