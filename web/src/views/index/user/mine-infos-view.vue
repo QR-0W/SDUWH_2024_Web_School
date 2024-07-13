@@ -3,8 +3,8 @@
     <!-- 个人信息区域 -->
     <div class="info-box flex-view">
       <!-- 用户头像 -->
-      <img :src="AvatarImg" class="avatar-img" />
-<!--      <img :src="userAvatarImg" class="avatar-img" />-->
+<!--      <img :src="AvatarImg" class="avatar-img" />-->
+      <img :src="avatarUrl" class="avatar-img" />
       <div class="name-box">
         <!-- 用户昵称 -->
         <h2 class="nick">{{ userStore.user_name }}</h2>
@@ -106,6 +106,7 @@ const clickMenu = (name) => {
   router.push({ name: name });
 };
 
+// 获取用户头像
 const getUserAvatar = async () => {
   let userId = userStore.user_id;
   if (!userId) {
@@ -117,7 +118,8 @@ const getUserAvatar = async () => {
     .then((res) => {
       console.log("头像API返回数据:", res); // 调试信息
       if (res && res.data) {
-        avatarUrl.value = res.data; // 这里使用响应的数据设置avatarUrl
+        // 拼接完整的URL
+        avatarUrl.value = `http://127.0.0.1:9101/api/staticfiles/avatar/${res.data}`;
         console.log("成功获取用户头像:", avatarUrl.value); // 调试信息
       } else {
         console.log("未能获取到用户头像数据");
