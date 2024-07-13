@@ -3,7 +3,7 @@ src/main/resources/application.yml
 
 .idea/
 
-my-log/springboot-demo.log
+my-log/
 
 server/src/main/resources/application.yml
 
