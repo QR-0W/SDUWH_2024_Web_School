@@ -133,16 +133,32 @@
         message.warn(err.msg || '登录失败');
       });
   };
+  /**
+   * 跳转到用户注册页面
+   *
+   * 本函数用于导航到应用程序中的用户注册页面。它不接受任何参数，也不返回任何值。
+   * 调用此函数将导致当前视图切换到注册页面，允许新用户创建他们的账户。
+   */
 
   const handleCreateUser = () => {
     router.push({ name: 'register' });
   };
 
+  /**
+   * 登录成功后的处理函数。
+   *
+   * 该函数在用户成功登录后被调用，负责将用户重定向到主门户页面，并显示一条成功登录的消息。
+   * 这样做是为了提供给用户明确的反馈，让用户知道登录操作已经成功完成，并且他们可以继续进行后续的操作。
+   *
+   * @returns {void} 该函数没有返回值。
+   */
   const loginSuccess = () => {
     router.push({ name: 'portal' });
     message.success('登录成功！');
   };
+
 </script>
+//样式表
 <style scoped lang="less">
   div {
     display: block;
