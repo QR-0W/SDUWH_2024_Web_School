@@ -14,9 +14,9 @@
 
 <script setup lang="ts">
 // 导入图片资源和组件
-import carousel01 from '/@/assets/images/Image_1715812747861.jpg';
-import carousel02 from '/@/assets/images/100543859_p1.jpg';
-import Header from '/@/views/index/components/header.vue';
+import carousel01 from "/@/assets/images/Image_1715812747861.jpg";
+import carousel02 from "/@/assets/images/100543859_p1.jpg";
+import Header from "/@/views/index/components/header.vue";
 
 // 导入路由功能
 const router = useRouter();

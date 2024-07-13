@@ -32,9 +32,9 @@
 </template>
 
 <script>
-  import { createApi, updateApi } from '/@/api/index/address';
+import { createApi, updateApi } from "/@/api/index/address";
 
-  export default {
+export default {
     name: 'EditAddress',
     props: {
       modifyFlag: {

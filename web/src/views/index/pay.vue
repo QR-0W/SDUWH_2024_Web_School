@@ -71,17 +71,16 @@
 
 <script setup lang="ts">
 // 导入组件和所需模块
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import { message } from 'ant-design-vue';
-import WxPayIcon from '/@/assets/images/wx-pay-icon.svg';
-import AliPayIcon from '/@/assets/images/ali-pay-icon.svg';
-import { detailApi, listApi as listThingList } from '/@/api/thing';
-import { BASE_URL } from '/@/store/constants';
-import { useRoute, useRouter } from 'vue-router/dist/vue-router';
-import { useUserStore } from '/@/store';
-import { getFormatTime } from '/@/utils';
-import { listApi, userOrderListApi, createApi, deleteApi, cancelApi, cancelUserOrderApi } from '/@/api/order';
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import { message } from "ant-design-vue";
+import WxPayIcon from "/@/assets/images/wx-pay-icon.svg";
+import AliPayIcon from "/@/assets/images/ali-pay-icon.svg";
+import { detailApi } from "/@/api/thing";
+import { BASE_URL } from "/@/store/constants";
+import { useRoute, useRouter } from "vue-router/dist/vue-router";
+import { useUserStore } from "/@/store";
+import { createApi } from "/@/api/order";
 
 // 获取路由和用户状态存储
 const router = useRouter();

@@ -15,15 +15,17 @@
 </template>
 
 <script>
-  export default {
-    name: 'FansView',
-    data() {
-      return {
-        fansData: ['', '', '', '', ''],
-      };
-    },
-  };
+export default {
+  name: 'FansView', // 组件名称
+  data() {
+    return {
+      fansData: ['', '', '', '', ''], // 粉丝数据，初始为一个包含五个空字符串的数组
+    };
+  },
+};
 </script>
+
+
 <style scoped lang="less">
   .flex-view {
     display: flex;
