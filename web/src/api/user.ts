@@ -3,6 +3,7 @@ import { get, post } from '/@/utils/http/axios';
 
 // import axios from 'axios';
 enum URL {
+  userAvatar = '/api/user/avatar',
   login = '/api/user/login',
   userList = '/api/user/list',
   detail = '/api/user/detail',
@@ -22,12 +23,18 @@ interface LoginRes {
 export interface LoginData {
   username: string;
   password: string;
+  useravatar: string;
 }
+const userAvatarApi = async (data: any) =>
+  post<any>({ url: URL.userAvatar, data: data, headers: { 'Content-Type': 'application/json' } });
 
 const loginApi = async (data: LoginData) =>
   post<any>({ url: URL.login, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+
 const listApi = async (params: any) => get<any>({ url: URL.userList, params: params, data: {}, headers: {} });
+
 const detailApi = async (params: any) => get<any>({ url: URL.detail, params: params, data: {}, headers: {} });
+
 const createApi = async (data: any) =>
   post<any>({
     url: URL.create,
@@ -35,11 +42,15 @@ const createApi = async (data: any) =>
     data: data,
     headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' },
   });
+
 const updateApi = async (data: any) =>
   post<any>({ url: URL.update, data: data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+
 const deleteApi = async (params: any) => post<any>({ url: URL.delete, params: params, headers: {} });
+
 const userLoginApi = async (data: LoginData) =>
   post<any>({ url: URL.userLogin, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+
 const userRegisterApi = async (data: any) =>
   post<any>({
     url: URL.userRegister,
@@ -47,11 +58,14 @@ const userRegisterApi = async (data: any) =>
     data: data,
     headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' },
   });
+
 const updateUserPwdApi = async (params: any) => post<any>({ url: URL.updateUserPwd, params: params });
+
 const updateUserInfoApi = async (data: any) =>
   post<any>({ url: URL.updateUserInfo, data: data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
 
 export {
+  userAvatarApi,
   loginApi,
   listApi,
   detailApi,
