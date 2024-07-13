@@ -8,9 +8,9 @@
 
 <script>
 // 导入组件
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import Content from '/@/views/index/components/content.vue';
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import Content from "/@/views/index/components/content.vue";
 
 export default {
   // 注册组件

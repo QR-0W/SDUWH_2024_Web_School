@@ -47,9 +47,9 @@
 </template>
 
 <script setup>
-import { listApi as listThingList } from '/@/api/thing';
-import { BASE_URL } from '/@/store/constants';
-import { useUserStore } from '/@/store';
+import { listApi as listThingList } from "/@/api/thing";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
 const userStore = useUserStore();
 const router = useRouter();

@@ -23,50 +23,67 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
-  import { userWishListApi, unWishApi } from '/@/api/thingWish';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和工具
+import { message } from "ant-design-vue";
+import { unWishApi, userWishListApi } from "/@/api/thingWish";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
-  const router = useRouter();
-  const route = useRoute();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const route = useRoute();
+const userStore = useUserStore();
 
-  let wishData = ref([]);
+// 定义响应式变量
+let wishData = ref([]); // 心愿单数据
 
-  onMounted(() => {
-    getWishThingList();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getWishThingList(); // 获取心愿单列表
+});
 
-  const handleClickItem = (record) => {
-    let text = router.resolve({ name: 'detail', query: { id: record.thing_id } });
-    window.open(text.href, '_blank');
-  };
+/**
+ * 处理点击心愿单项的逻辑
+ * @param {Object} record 心愿单项记录
+ */
+const handleClickItem = (record) => {
+  let text = router.resolve({ name: 'detail', query: { id: record.thing_id } });
+  window.open(text.href, '_blank'); // 打开新的浏览器标签页，显示心愿单项详情
+};
 
-  const handleRemove = (record) => {
-    unWishApi({ id: record.id })
-      .then((res) => {
-        message.success('移除成功');
-        getWishThingList();
-      })
-      .catch((err) => {
-        console.log(err);
+/**
+ * 处理移除心愿单项的逻辑
+ * @param {Object} record 心愿单项记录
+ */
+const handleRemove = (record) => {
+  unWishApi({ id: record.id })
+    .then((res) => {
+      message.success('移除成功'); // 显示移除成功的消息
+      getWishThingList(); // 刷新心愿单列表
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+    });
+};
+
+/**
+ * 获取心愿单列表
+ */
+const getWishThingList = () => {
+  let userId = userStore.user_id; // 获取当前用户ID
+  userWishListApi({ userId: userId })
+    .then((res) => {
+      res.data.forEach((item) => {
+        item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover; // 设置图片的完整URL
       });
-  };
-  const getWishThingList = () => {
-    let userId = userStore.user_id;
-    userWishListApi({ userId: userId })
-      .then((res) => {
-        res.data.forEach((item) => {
-          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-        });
-        wishData.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err.msg);
-      });
-  };
+      wishData.value = res.data; // 更新心愿单数据
+    })
+    .catch((err) => {
+      console.log(err.msg); // 打印错误信息
+    });
+};
 </script>
+
 <style scoped lang="less">
   .flex-view {
     display: -webkit-box;

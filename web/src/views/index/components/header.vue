@@ -89,8 +89,8 @@ import SearchIcon from "/@/assets/images/search-icon.svg";
 import AvatarIcon from "/@/assets/images/avatar.jpg";
 import MessageIcon from "/@/assets/images/message-icon.svg";
 import { message } from "ant-design-vue";
-import { ref, onMounted } from 'vue';
-import { userAvatarApi } from '/@/api/user';
+import { onMounted, ref } from "vue";
+import { userAvatarApi } from "/@/api/user";
 
 const userStore = useUserStore();
 const avatarUrl = ref(AvatarIcon); // 初始化为默认头像

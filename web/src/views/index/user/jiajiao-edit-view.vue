@@ -92,152 +92,175 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
-  import { listUserThingApi, updateApi, createApi } from '/@/api/thing';
-  import { listApi as listClassificationApi } from '/@/api/classification';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
-  import AvatarIcon from '/@/assets/images/avatar.jpg';
+// 导入必要的模块和组件
+import { message } from "ant-design-vue";
+import { createApi, listUserThingApi, updateApi } from "/@/api/thing";
+import { listApi as listClassificationApi } from "/@/api/classification";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
+import AvatarIcon from "/@/assets/images/avatar.jpg";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  let loading = ref(false);
-  let tData = reactive({
-    form: {
-      avatar: undefined,
-      avatarFile: undefined,
-      title: undefined,
-      age: undefined,
-      sex: undefined,
-      price: undefined,
-      mobile: undefined,
-      location: undefined,
-      description: undefined,
-      classificationId: undefined,
-    },
+// 定义响应式变量和状态
+let loading = ref(false); // 加载状态
+let tData = reactive({
+  form: {
+    avatar: undefined,         // 头像
+    avatarFile: undefined,     // 头像文件
+    title: undefined,          // 标题
+    age: undefined,            // 年龄
+    sex: undefined,            // 性别
+    price: undefined,          // 价格
+    mobile: undefined,         // 手机号
+    location: undefined,       // 地区
+    description: undefined,    // 描述
+    classificationId: undefined, // 分类ID
+  },
+});
+
+let cData = ref([]); // 分类数据
+let sexOption = { 男: String, 女: String }; // 性别选项
+
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getCDataList(); // 获取分类数据
+  getUserThing(); // 获取用户事物数据
+});
+
+/**
+ * 文件上传前的处理函数
+ * @param {File} file 上传的文件
+ * @returns {boolean} 返回false以阻止默认上传行为
+ */
+const beforeUpload = (file) => {
+  // 改文件名
+  const fileName = new Date().getTime().toString() + '.' + file.type.substring(6);
+  const copyFile = new File([file], fileName);
+  console.log(copyFile);
+  tData.form.avatarFile = copyFile;
+  return false;
+};
+
+/**
+ * 获取分类数据列表
+ */
+const getCDataList = () => {
+  listClassificationApi({}).then((res) => {
+    cData.value = res.data;
   });
+};
 
-  let cData = ref([]);
-  let sexOption = { 男: String, 女: String };
-  onMounted(() => {
-    getCDataList();
-    getUserThing();
-  });
-
-  const beforeUpload = (file) => {
-    // 改文件名
-    const fileName = new Date().getTime().toString() + '.' + file.type.substring(6);
-    const copyFile = new File([file], fileName);
-    console.log(copyFile);
-    tData.form.avatarFile = copyFile;
-    return false;
-  };
-
-  const getCDataList = () => {
-    listClassificationApi({}).then((res) => {
-      cData.value = res.data;
+/**
+ * 获取家教数据
+ */
+const getUserThing = () => {
+  loading.value = true; // 设置加载状态为true
+  let userId = userStore.user_id; // 获取当前用户ID
+  listUserThingApi({ userId: userId })
+    .then((res) => {
+      console.log(res);
+      if (res.data && res.data.length > 0) {
+        tData.form = res.data[0];
+      }
+      if (tData.form.cover) {
+        tData.form.avatar = BASE_URL + '/api/staticfiles/image/' + tData.form.cover;
+      }
+      loading.value = false; // 设置加载状态为false
+    })
+    .catch((err) => {
+      console.log(err);
+      loading.value = false; // 设置加载状态为false
     });
-  };
+};
 
-  const getUserThing = () => {
-    loading.value = true;
-    let userId = userStore.user_id;
-    listUserThingApi({ userId: userId })
+/**
+ * 提交表单数据
+ */
+const submit = () => {
+  let formData = new FormData();
+  let userId = userStore.user_id;
+
+  if (tData.form.avatarFile) {
+    formData.append('imageFile', tData.form.avatarFile);
+  }
+  if (tData.form.title) {
+    formData.append('title', tData.form.title);
+  } else {
+    message.warn('姓名不能为空');
+    return;
+  }
+  if (tData.form.id) {
+    formData.append('id', tData.form.id);
+  }
+  if (tData.form.classificationId) {
+    formData.append('classificationId', tData.form.classificationId);
+  }
+  if (tData.form.sex) {
+    formData.append('sex', tData.form.sex);
+  } else {
+    message.warn('性别不能为空');
+    return;
+  }
+  if (tData.form.age) {
+    formData.append('age', tData.form.age);
+  } else {
+    message.warn('年龄不能为空');
+    return;
+  }
+  if (tData.form.mobile) {
+    formData.append('mobile', tData.form.mobile);
+  } else {
+    message.warn('手机号不能为空');
+    return;
+  }
+  if (tData.form.location) {
+    formData.append('location', tData.form.location);
+  } else {
+    message.warn('地区不能为空');
+    return;
+  }
+  if (tData.form.price) {
+    formData.append('price', tData.form.price);
+  } else {
+    message.warn('价格不能为空');
+    return;
+  }
+  if (tData.form.description) {
+    formData.append('description', tData.form.description);
+  } else {
+    message.warn('简介不能为空');
+    return;
+  }
+
+  formData.append('userId', userId);
+  formData.append('status', '1');
+
+  if (tData.form.id) {
+    updateApi(formData)
       .then((res) => {
-        console.log(res);
-        if (res.data && res.data.length > 0) {
-          tData.form = res.data[0];
-        }
-        if (tData.form.cover) {
-          tData.form.avatar = BASE_URL + '/api/staticfiles/image/' + tData.form.cover;
-        }
-        loading.value = false;
+        message.success('保存成功，后台审核中');
+        getUserThing(); // 更新用户事物数据
       })
       .catch((err) => {
         console.log(err);
-        loading.value = false;
       });
-  };
-  const submit = () => {
-    let formData = new FormData();
-    let userId = userStore.user_id;
-    if (tData.form.avatarFile) {
-      formData.append('imageFile', tData.form.avatarFile);
-    }
-    if (tData.form.title) {
-      formData.append('title', tData.form.title);
-    } else {
-      message.warn('姓名不能为空');
-      return;
-    }
-    if (tData.form.id) {
-      formData.append('id', tData.form.id);
-    }
-    if (tData.form.classificationId) {
-      formData.append('classificationId', tData.form.classificationId);
-    }
-    if (tData.form.sex) {
-      formData.append('sex', tData.form.sex);
-    } else {
-      message.warn('性别不能为空');
-      return;
-    }
-
-    if (tData.form.age) {
-      formData.append('age', tData.form.age);
-    } else {
-      message.warn('年龄不能为空');
-      return;
-    }
-    if (tData.form.mobile) {
-      formData.append('mobile', tData.form.mobile);
-    } else {
-      message.warn('手机号不能为空');
-      return;
-    }
-    if (tData.form.location) {
-      formData.append('location', tData.form.location);
-    } else {
-      message.warn('地区不能为空');
-      return;
-    }
-    if (tData.form.price) {
-      formData.append('price', tData.form.price);
-    } else {
-      message.warn('价格不能为空');
-      return;
-    }
-    if (tData.form.description) {
-      formData.append('description', tData.form.description);
-    } else {
-      message.warn('简介不能为空');
-      return;
-    }
-    formData.append('userId', userId);
-    formData.append('status', '1');
-
-    if (tData.form.id) {
-      updateApi(formData)
-        .then((res) => {
-          message.success('保存成功，后台审核中');
-          getUserThing();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      createApi(formData)
-        .then((res) => {
-          message.success('保存成功，后台审核中');
-          getUserThing();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+  } else {
+    createApi(formData)
+      .then((res) => {
+        message.success('保存成功，后台审核中');
+        getUserThing(); // 更新用户事物数据
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+};
 </script>
+
+
 
 <style scoped lang="less">
   input,

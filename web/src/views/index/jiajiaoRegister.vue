@@ -94,15 +94,15 @@
 
 <script setup lang="ts">
 // 导入所需组件和模块
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
 
-import { message } from 'ant-design-vue';
-import { listUserThingApi, updateApi, createApi } from '/@/api/thing';
-import { listApi as listClassificationApi } from '/@/api/classification';
-import { BASE_URL } from '/@/store/constants';
-import { useUserStore } from '/@/store';
-import AvatarIcon from '/@/assets/images/avatar.jpg';
+import { message } from "ant-design-vue";
+import { createApi, listUserThingApi, updateApi } from "/@/api/thing";
+import { listApi as listClassificationApi } from "/@/api/classification";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
+import AvatarIcon from "/@/assets/images/avatar.jpg";
 
 // 获取路由和用户状态存储
 const router = useRouter();
