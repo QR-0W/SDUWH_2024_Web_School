@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { NoticeListApi } from "/@/api/notice";
+import { listApi } from "/@/api/notice";
 import { useUserStore } from "/@/store";
 import logoImage from "/@/assets/images/logo2.svg";
 import SearchIcon from "/@/assets/images/search-icon.svg";
@@ -110,7 +110,7 @@ onMounted(() => {
  */
 const getNoticeList = () => {
   loading.value = true; // 设置加载状态
-  NoticeListApi({})
+  listApi({})
     .then((res) => {
       noticeData.value = res.data; // 设置通知数据
       loading.value = false; // 关闭加载状态

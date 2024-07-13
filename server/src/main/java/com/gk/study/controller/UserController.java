@@ -20,10 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-/**
- * @author lengqin1024(微信)
- * @email net936@163.com
- */
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -209,6 +206,24 @@ public class UserController {
         }
 
     }
+
+    /**
+     * 获取用户头像
+     * @param userId
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/userAvatar")
+    @Transactional
+    public APIResponse getUserAvatar(@RequestParam String userId) throws IOException {
+        User user = userService.getUserAvatar(userId);
+        if (user != null && user.getAvatar() != null) {
+            return new APIResponse(ResponeCode.SUCCESS, "查询成功", user.getAvatar());
+        } else {
+            return new APIResponse(ResponeCode.FAIL, "用户头像不存在");
+        }
+    }
+
 
     public String saveAvatar(User user) throws IOException {
         MultipartFile file = user.getAvatarFile();
