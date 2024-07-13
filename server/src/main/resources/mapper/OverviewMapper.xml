@@ -24,3 +24,4 @@
         group by re_ip
     </select>
 </mapper>
+<!-- 定义了OverviewMapper接口中的三个SQL查询操作，用于检索热门商品、热门分类以及网站访问数据。-->
