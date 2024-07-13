@@ -10,3 +10,4 @@
     </select>
 
 </mapper>
+<!-- 它定义了一个名为getThingCollectList的查询操作，该操作从数据库中检索数据。-->

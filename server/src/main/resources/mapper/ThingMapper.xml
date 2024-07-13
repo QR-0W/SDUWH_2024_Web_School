@@ -9,3 +9,5 @@
 
 
 </mapper>
+<!-- 这个Mapper文件定义了一个select查询，用于从b_thing表中检索所有记录，
+并将这些记录映射到com.gk.study.entity.Thing这个Java类上。-->
