@@ -26,3 +26,5 @@
     </select>
 
 </mapper>
+<!-- 定义了OrderMapper接口中的两个SQL查询操作，用于从数据库中检索订单信息。
+每个查询都涉及到b_order（订单表）、b_user（用户表）和b_thing（事物或商品表）三个表的联接。-->
