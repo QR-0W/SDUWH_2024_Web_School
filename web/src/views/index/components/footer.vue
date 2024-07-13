@@ -24,7 +24,7 @@
       <span>&nbsp;&nbsp;京公网安备123456&nbsp;&nbsp;新出发京零字第东123456号&nbsp;&nbsp;统一社会信用代码 123456789</span>
     </div>
     <!-- 地址信息 -->
-    <div class="address">2022-2023 © 北京代码演示 · All Rights Reserved</div>
+    <div class="address">2022-2023 © 火蝶开发组 · All Rights Reserved</div>
   </div>
 </template>
 

@@ -8,6 +8,23 @@ BASE_LOCATION: D:\Study\Web_School # 基础路径
 DB_NAME: java_jiajiao  # 数据库名称
 
 spring:
+  #aa新增
+  mail:
+    host: smtp.qq.com
+    username: 1749051725@qq.com
+    password: ihbokygdenzncccc
+    default-encoding: UTF-8
+    from: 1749051725@qq.com
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+    port: 465
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
   datasource:
     username: root  # 数据库用户名
     password: 123456  # 数据库密码
