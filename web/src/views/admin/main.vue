@@ -20,14 +20,6 @@
             <database-outlined />
             <span>家教管理</span>
           </a-menu-item>
-          <a-menu-item key="resource">
-            <database-outlined />
-            <span>资料管理</span>
-          </a-menu-item>
-          <a-menu-item key="classification">
-            <layout-outlined />
-            <span>科目管理</span>
-          </a-menu-item>
           <a-menu-item key="tag">
             <tag-outlined />
             <span>标签管理</span>
@@ -47,28 +39,6 @@
           <a-menu-item key="notice">
             <appstore-outlined />
             <span>通知公告</span>
-          </a-menu-item>
-          <a-sub-menu>
-            <template #icon>
-              <folder-outlined />
-            </template>
-            <template #title>日志管理</template>
-            <a-menu-item key="loginLog">
-              <appstore-outlined />
-              <span>登录日志</span>
-            </a-menu-item>
-            <a-menu-item key="opLog">
-              <appstore-outlined />
-              <span>操作日志</span>
-            </a-menu-item>
-            <a-menu-item key="errorLog">
-              <appstore-outlined />
-              <span>错误日志</span>
-            </a-menu-item>
-          </a-sub-menu>
-          <a-menu-item key="overview">
-            <home-outlined />
-            <span>统计分析</span>
           </a-menu-item>
           <a-menu-item key="sysInfo">
             <info-circle-outlined />
