@@ -80,11 +80,11 @@
 </template>
 
 <script setup>
-import { listApi as listClassificationList } from '/@/api/classification';
-import { listApi as listTagList } from '/@/api/tag';
-import { listApi as listThingList } from '/@/api/thing';
-import { BASE_URL } from '/@/store/constants';
-import { useUserStore } from '/@/store';
+import { listApi as listClassificationList } from "/@/api/classification";
+import { listApi as listTagList } from "/@/api/tag";
+import { listApi as listThingList } from "/@/api/thing";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
 // 获取用户存储
 const userStore = useUserStore();

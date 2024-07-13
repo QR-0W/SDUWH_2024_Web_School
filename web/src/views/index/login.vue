@@ -12,7 +12,7 @@
         <div class="common-input">
           <img :src="MailIcon" class="left-icon" />
           <div class="input-view">
-            <input placeholder="请输入用户名" v-model="pageData.loginForm.username" type="text" class="input" />
+            <input placeholder="请输入登录邮箱" v-model="pageData.loginForm.username" type="text" class="input" />
             <p class="err-view"> </p>
           </div>
         </div>
@@ -59,12 +59,12 @@
 
 <script setup lang="ts">
 // 导入必要的模块和组件
-import { ref, reactive } from 'vue';
-import { useUserStore } from '/@/store';
-import { message } from 'ant-design-vue';
-import LogoIcon from '/@/assets/images/logo2.svg';
-import MailIcon from '/@/assets/images/mail-icon.svg';
-import PwdIcon from '/@/assets/images/pwd-icon.svg';
+import { reactive, ref } from "vue";
+import { useUserStore } from "/@/store";
+import { message } from "ant-design-vue";
+import LogoIcon from "/@/assets/images/logo2.svg";
+import MailIcon from "/@/assets/images/mail-icon.svg";
+import PwdIcon from "/@/assets/images/pwd-icon.svg";
 
 // 获取路由和用户状态存储
 const router = useRouter();
@@ -105,6 +105,7 @@ const handleLogin = () => {
     .catch((err) => {
       message.warn(err.msg || '登录失败');
     });
+
 };
 
 /**

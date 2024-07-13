@@ -17,9 +17,9 @@
 
 <script>
 // 导入组件
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import MineInfosView from '/@/views/index/user/jiajiaoInfosView.vue';
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import MineInfosView from "/@/views/index/user/jiajiaoInfosView.vue";
 
 export default {
   // 注册组件

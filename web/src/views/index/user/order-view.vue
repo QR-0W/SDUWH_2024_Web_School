@@ -69,74 +69,97 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
-  import { getFormatTime } from '/@/utils/';
-  import { userOrderListApi } from '/@/api/order';
-  import { cancelUserOrderApi } from '/@/api/order';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和工具
+import { message } from "ant-design-vue";
+import { getFormatTime } from "/@/utils/";
+import { cancelUserOrderApi, userOrderListApi } from "/@/api/order";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
-  const router = useRouter();
-  const route = useRoute();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const route = useRoute();
+const userStore = useUserStore();
 
-  const loading = ref(false);
-  const orderData = ref([]);
-  const orderStatus = ref('');
+// 定义响应式变量
+const loading = ref(false); // 加载状态
+const orderData = ref([]); // 订单数据
+const orderStatus = ref(''); // 订单状态
 
-  onMounted(() => {
-    getOrderList();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getOrderList(); // 获取订单列表
+});
 
-  const onTabChange = (key) => {
-    console.log(key);
-    if (key === '1') {
-      orderStatus.value = '';
-    }
-    if (key === '2') {
-      orderStatus.value = '1';
-    }
-    if (key === '3') {
-      orderStatus.value = '2';
-    }
-    getOrderList();
-  };
-  const getOrderList = () => {
-    loading.value = true;
-    let userId = userStore.user_id;
-    userOrderListApi({ userId: userId, status: orderStatus.value })
-      .then((res) => {
-        res.data.forEach((item, index) => {
-          if (item.cover) {
-            item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-          }
-        });
-        orderData.value = res.data;
-        loading.value = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        loading.value = false;
+/**
+ * 处理选项卡切换事件
+ * @param {string} key 选项卡的键
+ */
+const onTabChange = (key) => {
+  console.log(key);
+  if (key === '1') {
+    orderStatus.value = ''; // 全部订单
+  }
+  if (key === '2') {
+    orderStatus.value = '1'; // 待支付订单
+  }
+  if (key === '3') {
+    orderStatus.value = '2'; // 已支付订单
+  }
+  getOrderList(); // 根据选项卡状态获取订单列表
+};
+
+/**
+ * 获取订单列表
+ */
+const getOrderList = () => {
+  loading.value = true; // 设置加载状态为true
+  let userId = userStore.user_id; // 获取当前用户ID
+  userOrderListApi({ userId: userId, status: orderStatus.value })
+    .then((res) => {
+      res.data.forEach((item, index) => {
+        if (item.cover) {
+          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover; // 设置图片的完整URL
+        }
       });
-  };
-  const handleDetail = (thingId) => {
-    // 跳转新页面
-    let text = router.resolve({ name: 'detail', query: { id: thingId } });
-    window.open(text.href, '_blank');
-  };
-  const handleCancel = (item) => {
-    cancelUserOrderApi({
-      id: item.id,
+      orderData.value = res.data; // 更新订单数据
+      loading.value = false; // 设置加载状态为false
     })
-      .then((res) => {
-        message.success('取消成功');
-        getOrderList();
-      })
-      .catch((err) => {
-        message.error(err.msg || '取消失败');
-      });
-  };
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+      loading.value = false; // 设置加载状态为false
+    });
+};
+
+/**
+ * 处理订单详情查看
+ * @param {string} thingId 订单关联的物品ID
+ */
+const handleDetail = (thingId) => {
+  // 跳转新页面
+  let text = router.resolve({ name: 'detail', query: { id: thingId } });
+  window.open(text.href, '_blank');
+};
+
+/**
+ * 处理取消订单操作
+ * @param {Object} item 订单项
+ */
+const handleCancel = (item) => {
+  cancelUserOrderApi({
+    id: item.id,
+  })
+    .then((res) => {
+      message.success('取消成功'); // 显示取消成功的消息
+      getOrderList(); // 刷新订单列表
+    })
+    .catch((err) => {
+      message.error(err.msg || '取消失败'); // 显示取消失败的消息
+    });
+};
 </script>
+
+
 <style scoped lang="less">
   .flex-view {
     display: -webkit-box;

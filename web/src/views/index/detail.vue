@@ -198,23 +198,23 @@
 
 <script setup>
 // 导入所需模块和组件
-import { message, Modal } from 'ant-design-vue';
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import AddIcon from '/@/assets/images/add.svg';
-import WantIcon from '/@/assets/images/want-read-hover.svg';
-import RecommendIcon from '/@/assets/images/recommend-hover.svg';
-import ShareIcon from '/@/assets/images/share-icon.svg';
-import WeiboShareIcon from '/@/assets/images/wb-share.svg';
-import AvatarIcon from '/@/assets/images/avatar.jpg';
-import { detailApi, listApi as listThingList } from '/@/api/thing';
-import { listThingCommentsApi, createApi as createCommentApi, likeApi } from '/@/api/comment';
-import { wishApi } from '/@/api/thingWish';
-import { collectApi } from '/@/api/thingCollect';
-import { BASE_URL } from '/@/store/constants';
-import { useRoute, useRouter } from 'vue-router/dist/vue-router';
-import { useUserStore } from '/@/store';
-import { getFormatTime } from '/@/utils';
+import { message, Modal } from "ant-design-vue";
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import AddIcon from "/@/assets/images/add.svg";
+import WantIcon from "/@/assets/images/want-read-hover.svg";
+import RecommendIcon from "/@/assets/images/recommend-hover.svg";
+import ShareIcon from "/@/assets/images/share-icon.svg";
+import WeiboShareIcon from "/@/assets/images/wb-share.svg";
+import AvatarIcon from "/@/assets/images/avatar.jpg";
+import { detailApi, listApi as listThingList } from "/@/api/thing";
+import { createApi as createCommentApi, likeApi, listThingCommentsApi } from "/@/api/comment";
+import { wishApi } from "/@/api/thingWish";
+import { collectApi } from "/@/api/thingCollect";
+import { BASE_URL } from "/@/store/constants";
+import { useRoute, useRouter } from "vue-router/dist/vue-router";
+import { useUserStore } from "/@/store";
+import { getFormatTime } from "/@/utils";
 
 // 初始化变量和状态
 const router = useRouter(); // 路由对象，用于导航

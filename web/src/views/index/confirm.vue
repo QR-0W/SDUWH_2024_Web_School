@@ -135,13 +135,12 @@
 </template>
 
 <script setup lang="ts">
-import { message } from 'ant-design-vue';
-import Header from '/@/views/index/components/header.vue';
-import Footer from '/@/views/index/components/footer.vue';
-import DeleteIcon from '/@/assets/images/delete-icon.svg';
-import { createApi } from '/@/api/order';
-import { listApi as listAddressListApi, createApi as createAddressApi } from '/@/api/address';
-import { useUserStore } from '/@/store';
+import { message } from "ant-design-vue";
+import Header from "/@/views/index/components/header.vue";
+import DeleteIcon from "/@/assets/images/delete-icon.svg";
+import { createApi } from "/@/api/order";
+import { createApi as createAddressApi, listApi as listAddressListApi } from "/@/api/address";
+import { useUserStore } from "/@/store";
 
 // 获取路由和用户存储
 const router = useRouter();  // 获取路由对象，用于导航

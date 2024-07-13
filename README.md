@@ -31,8 +31,9 @@
 
 <div align="center">
   <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">
-    <img src="./assets/校徽.png" alt="Logo" width="80" height="80">
+    <img src="./assets/校徽.png" alt="Logo" width="120" height="120">
   </a>
+
 
 <h3 align="center">家教系统</h3>
 

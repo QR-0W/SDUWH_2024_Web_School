@@ -16,15 +16,16 @@
 </template>
 
 <script>
-  export default {
-    name: 'FollowView',
-    data() {
-      return {
-        followData: ['', '', '', '', ''],
-      };
-    },
-  };
+export default {
+  name: 'FollowView', // 组件名称
+  data() {
+    return {
+      followData: ['', '', '', '', ''], // 关注数据，初始为一个包含五个空字符串的数组
+    };
+  },
+};
 </script>
+
 <style scoped lang="less">
   .flex-view {
     display: flex;

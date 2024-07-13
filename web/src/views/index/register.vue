@@ -66,12 +66,12 @@
 
 <script setup lang="ts">
 // 导入必要的模块和组件
-import { userRegisterApi } from '/@/api/user';
-import { message } from 'ant-design-vue';
-import MailIcon from '/@/assets/images/mail-icon.svg';
-import PwdIcon from '/@/assets/images/pwd-icon.svg';
-import { useUserStore } from '/@/store';
-import UserIcon from '/@/assets/images/user.svg';
+import { userRegisterApi } from "/@/api/user";
+import { message } from "ant-design-vue";
+import MailIcon from "/@/assets/images/mail-icon.svg";
+import PwdIcon from "/@/assets/images/pwd-icon.svg";
+import { useUserStore } from "/@/store";
+import UserIcon from "/@/assets/images/user.svg";
 
 const router = useRouter(); // 获取路由对象，用于页面跳转
 const userStore = useUserStore(); // 获取用户存储对象，用于管理用户状态
