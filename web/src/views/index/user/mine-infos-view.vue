@@ -1,5 +1,6 @@
 <template>
   <div class="mine-infos-view">
+
     <!-- 个人信息区域 -->
     <div class="info-box flex-view">
       <!-- 用户头像 -->
@@ -66,8 +67,8 @@
         </div>
         <!-- 消息管理 -->
         <div class="mine-item flex-view" @click="clickMenu('messageView')">
-          <img :src="MessageIconImage" alt="消息管理" />
-          <span>消息管理</span>
+          <img :src="MessageIconImage" alt="消息查看" />
+          <span>消息查看</span>
         </div>
       </div>
     </div>
@@ -119,7 +120,7 @@ const getUserAvatar = async () => {
       console.log("头像API返回数据:", res); // 调试信息
       if (res && res.data) {
         // 拼接完整的URL
-        avatarUrl.value = `http://127.0.0.1:9101/api/staticfiles/avatar/${res.data}`;
+        avatarUrl.value = `http://localhost:9101/api/staticfiles/avatar/${res.data}`;
         console.log("成功获取用户头像:", avatarUrl.value); // 调试信息
       } else {
         console.log("未能获取到用户头像数据");
