@@ -207,7 +207,8 @@
 
 ## 致谢
 
-* [othneildrew]([othneildrew/Best-README-Template: An awesome README template to jumpstart your projects! (github.com)](https://github.com/othneildrew/Best-README-Template))
+* [othneildrew](https://github.com/othneildrew/Best-README-Template))
+* [Choose an Open Source License](https://choosealicense.com)
 
   
 
