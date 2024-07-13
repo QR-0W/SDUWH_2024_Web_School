@@ -2,7 +2,9 @@
   <div id="userLayout">
     <div class="user-layout-header">
       <img class="logo" :src="logoImage" alt="">
-      <span>火蝶家教后台管理系统</span>
+
+      <span>火蝶家教-后台管理系统</span>
+
     </div>
     <div class="main-container">
       <div class="main">
