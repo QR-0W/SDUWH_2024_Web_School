@@ -25,8 +25,8 @@ export interface LoginData {
   password: string;
   useravatar: string;
 }
-const userAvatarApi = async (data: any) =>
-  post<any>({ url: URL.userAvatar, data: data, headers: { 'Content-Type': 'application/json' } });
+const userAvatarApi = async (params: any) =>
+  get<any>({ url: URL.userAvatar, params: params, headers: { 'Content-Type': 'application/json' } });
 
 const loginApi = async (data: LoginData) =>
   post<any>({ url: URL.login, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });

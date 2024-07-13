@@ -213,9 +213,10 @@ public class UserController {
      * @return
      * @throws IOException
      */
-    @GetMapping("/userAvatar")
+    @GetMapping("/avatar")
     @Transactional
     public APIResponse getUserAvatar(@RequestParam String userId) throws IOException {
+        System.out.println("接收到的用户ID: " + userId); // 调试信息
         User user = userService.getUserAvatar(userId);
         if (user != null && user.getAvatar() != null) {
             return new APIResponse(ResponeCode.SUCCESS, "查询成功", user.getAvatar());
@@ -223,7 +224,6 @@ public class UserController {
             return new APIResponse(ResponeCode.FAIL, "用户头像不存在");
         }
     }
-
 
     public String saveAvatar(User user) throws IOException {
         MultipartFile file = user.getAvatarFile();
