@@ -91,7 +91,7 @@
 
 ![img](README.assets/屏幕截图_13-7-2024_204322_192.168.31.59.jpeg)
 
-本项目为家教信息管理平台，提供家教选择，信息管理等功能。
+本项目为家教信息管理平台，提供家教检索与推荐，信息管理等功能。
 
 
 
@@ -99,7 +99,8 @@
 
 * [Vue.js](https://vuejs.org/)
 * [Bootstrap](https://getbootstrap.com)
-* JDK 1.8
+* [JDK 1.8](https://www.oracle.com/java/)
+* [Springboot](https://spring.io/projects/spring-boot/)
 
 
 
@@ -187,7 +188,7 @@
 - [x] 后端创建 Service - Controller - Mapper 层
 - [x] 后端开放接口
 - [x] 前端利用Vue +Ant design创建基础界面
-- [ ] 实现邮箱验证码功能
+- [x] 实现邮箱验证码功能
 - [x] 用户头像显示动态更新
 - [ ] 绑定手机号和安全验证
 
