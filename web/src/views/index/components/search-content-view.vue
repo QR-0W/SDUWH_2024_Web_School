@@ -81,7 +81,9 @@ watch(
   (newPath, oldPath) => {
     search();
   },
-  { immediate: false }
+  {
+    immediate: false
+  }
 );
 
 /**

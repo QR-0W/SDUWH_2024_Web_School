@@ -2,13 +2,11 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import piniaStore from './store';
-
+import 'element-plus/dist/index.css';
 import bootstrap from './core/bootstrap';
 import '/@/styles/reset.less';
 import '/@/styles/index.less';
 import Antd from 'ant-design-vue';
-
-import 'element-plus/dist/index.css';
 
 const app = createApp(App);
 
