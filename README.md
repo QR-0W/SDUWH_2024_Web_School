@@ -40,7 +40,7 @@
   <p align="center">
     本项目为家教信息管理平台，提供家教选择，信息管理等功能。
     <br />
-    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School"><strong>浏览文档 »</strong></a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/tree/main/docs"><strong>浏览文档 »</strong></a>
     <br />
     <br />
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">查看 Demo</a>
@@ -49,6 +49,7 @@
     ·
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/issues">请求新功能</a>
   </p>
+
 
 
 </div>
@@ -186,7 +187,7 @@
 - [x] 后端创建 Service - Controller - Mapper 层
 - [x] 后端开放接口
 - [x] 前端利用Vue +Ant design创建基础界面
-- [x] 实现邮箱验证码功能
+- [ ] 实现邮箱验证码功能
 - [x] 用户头像显示动态更新
 - [ ] 绑定手机号和安全验证
 
