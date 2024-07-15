@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
+<<<<<<< HEAD
+
+=======
 /**
  *
  */
+>>>>>>> 6904f517f2d4f866ddab20c10942a5b0e8ad36b1
 @RestController
 @RequestMapping("/address")
 public class AddressController {

@@ -22,9 +22,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+<<<<<<< HEAD
+
+=======
 /**
  *
  */
+>>>>>>> 6904f517f2d4f866ddab20c10942a5b0e8ad36b1
 @RestController
 @RequestMapping("/ad")
 public class AdController {
