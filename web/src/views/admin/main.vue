@@ -3,7 +3,9 @@
     <a-layout-header style="background: #fff; padding: 0">
       <div class="header">
         <img class="header-logo" :src="logo">
-        <span class="header-title">妈妈再也不用担心我的学习-后台管理系统</span>
+
+        <span class="header-title">火蝶家教-后台管理系统</span>
+
         <div class="empty"></div>
         <a-button style="margin-right: 24px;" @click="handlePreview">前台预览</a-button>
         <span>管理员[{{ userStore.admin_user_name }}]</span>
@@ -15,10 +17,14 @@
     <a-layout>
       <a-layout-sider v-model="collapsed" collapsible>
         <a-menu style="overflow:auto; overflow-x: hidden;" v-model:selectedKeys="selectedKeys" theme="dark" mode="inline"
-          @click="handleClick">
+                @click="handleClick">
           <a-menu-item key="thing">
             <database-outlined />
             <span>家教管理</span>
+          </a-menu-item>
+          <a-menu-item key="classification">
+            <layout-outlined />
+            <span>科目管理</span>
           </a-menu-item>
           <a-menu-item key="tag">
             <tag-outlined />
@@ -32,18 +38,12 @@
             <user-outlined />
             <span>用户管理</span>
           </a-menu-item>
-          <a-menu-item key="order">
-            <user-outlined />
-            <span>订单管理</span>
-          </a-menu-item>
           <a-menu-item key="notice">
             <appstore-outlined />
             <span>通知公告</span>
           </a-menu-item>
-          <a-menu-item key="sysInfo">
-            <info-circle-outlined />
-            <span>系统信息</span>
-          </a-menu-item>
+
+
         </a-menu>
       </a-layout-sider>
       <a-layout-content :style="{ margin: '16px 16px', minHeight: '200px' }">

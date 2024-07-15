@@ -13,26 +13,35 @@
 </template>
 
 <script setup lang="ts">
-  import carousel01 from '/@/assets/images/Image_1715812747861.jpg';
-  import carousel02 from '/@/assets/images/100543859_p1.jpg';
-  import Header from '/@/views/index/components/header.vue';
-  const router = useRouter();
+// 导入图片资源和组件
+import carousel01 from "/@/assets/images/Image_1715812747861.jpg";
+import carousel02 from "/@/assets/images/100543859_p1.jpg";
+import Header from "/@/views/index/components/header.vue";
 
-  const handleEnter = () => {
-    router.push({ name: 'portal' });
-  };
-  const carouselItems = [
-    {
-      image: carousel01,
-      title: '',
-      description: '',
-    },
-    {
-      image: carousel02,
-      title: '',
-      description: ' ',
-    },
-  ];
+// 导入路由功能
+const router = useRouter();
+
+/**
+ * 处理进入按钮的点击事件
+ * 跳转到门户页面
+ */
+const handleEnter = () => {
+  router.push({ name: 'portal' }); // 导航到名称为'portal'的路由
+};
+
+// 定义轮播图项目数组
+const carouselItems = [
+  {
+    image: carousel01,   // 轮播图项目1的图片
+    title: '',           // 轮播图项目1的标题
+    description: '',     // 轮播图项目1的描述
+  },
+  {
+    image: carousel02,   // 轮播图项目2的图片
+    title: '',           // 轮播图项目2的标题
+    description: ' ',    // 轮播图项目2的描述
+  },
+];
 </script>
 
 <style scoped>

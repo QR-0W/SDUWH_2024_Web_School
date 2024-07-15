@@ -31,15 +31,16 @@
 
 <div align="center">
   <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">
-    <img src="./assets/校徽.png" alt="Logo" width="80" height="80">
+    <img src="./assets/校徽.png" alt="Logo" width="120" height="120">
   </a>
+
 
 <h3 align="center">家教系统</h3>
 
   <p align="center">
-    本项目为家教信息管理平台，提供家教选择，信息管理等功能。
+    你说的对，但是《项目实训》是由山东大学（威海）自主研发的一款全新封闭世界冒险游戏。游戏发生在一个被称作「机房」的电子世界，在这里被Java培训班选中的人将被授予「Springboot」，引导微服务之力。你将扮演一位名为「回不了家的学生」的神必角色，在复制粘贴的开发中邂逅性格各异、能力独特的同学们，和它们一起击败项目作业，找回老师不存在的亲人的同时，逐步发掘「月薪过万」的真相。​
     <br />
-    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School"><strong>浏览文档 »</strong></a>
+    <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/tree/main/docs"><strong>浏览文档 »</strong></a>
     <br />
     <br />
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School">查看 Demo</a>
@@ -48,6 +49,7 @@
     ·
     <a href="https://github.com/QR-0W/SDUWH_2024_Web_School/issues">请求新功能</a>
   </p>
+
 
 
 </div>
@@ -87,9 +89,9 @@
 
 ## 关于本项目
 
-本项目为家教信息管理平台，提供家教选择，信息管理等功能。
+![img](README.assets/屏幕截图_13-7-2024_204322_192.168.31.59.jpeg)
 
-
+本项目为家教信息管理平台，提供家教检索与推荐，信息管理等功能。
 
 
 
@@ -97,22 +99,8 @@
 
 * [Vue.js](https://vuejs.org/)
 * [Bootstrap](https://getbootstrap.com)
-
-
-
-### 			团队分工：​							
-
-林正阳：类图设计文档、标签管理、评论管理、管理协调、答辩材料​		
-
-宦然：分类管理、答辩材料​							
-
-刘灿：用户管理、答辩材料​			
-
-于瑞东：家教管理、运营管理、答辩材料​							
-
-武敬信：需求分析报告、主页面、搜索界面、详细界面、用户中心、答辩材料
-
-安竟豪：数据库设计文档、后端管理全部界面、登录界面、注册界面、答辩材料
+* [JDK 1.8](https://www.oracle.com/java/)
+* [Springboot](https://spring.io/projects/spring-boot/)
 
 
 
@@ -121,21 +109,50 @@
 
 ## 开始
 
-这是一份在本地构建项目的指导的例子。要获取本地副本并且配置运行，你可以按照下面的示例步骤操作。
+这是一份在本地构建项目的指导的例子。
+
+要获取本地副本并且配置运行，你可以按照下面的示例步骤操作。
+
+
 
 ### 依赖
 
-这只是一个列出软件依赖和安装方法的例子。
-
-（等待补全）
+- Ant design
+- Axios
+- Echarts
+- Element-plus
+- Pinia
+- Vite
+- JDK 1.8
+- Maven
+- Spring
+- Spring MVC
+- Springboot 
+- MyBatis
+- Druid
+- MySQL
+- Redis
+- Servlet
 
 
 
 ### 安装
 
-（等待补全）
+#### 后端
 
+- 配置依赖项
 
+- 配置后端端口、DB_NAME、BASE_LOCATION，位于 `application.yml`
+
+- 修改 LOG_HOME 的 value 值，位于 `logback-spring.xml`
+
+- 配置 JDK
+
+  
+
+#### 前端
+
+- 配置依赖项
 
 
 
@@ -143,9 +160,7 @@
 
 ## 使用方法
 
-（等待补全）
-
-
+启动后端项目，在前端根目录下运行 `npm run dev` ，启动网页。
 
 
 
@@ -154,16 +169,14 @@
 ## 路线图
 
 - [x] 数据库创建
-- [x] 后端创建 Service - Controller - Mapper 
-- [x] 后端开放前端接口
-- [x] 前端 Ant design 创建界面
-- [x] 邮箱验证码功能
-- [ ] 用户头像显示动态更新
+- [x] 后端创建 Service - Controller - Mapper 层
+- [x] 后端开放接口
+- [x] 前端利用Vue +Ant design创建基础界面
+- [x] 实现邮箱验证码功能
+- [x] 用户头像显示动态更新
 - [ ] 绑定手机号和安全验证
 
 到 [open issues](https://github.com/QR-0W/SDUWH_2024_Web_School/issues) 页查看所有请求的功能 （以及已知的问题）。
-
-
 
 
 
@@ -183,15 +196,11 @@
 
 
 
-
-
 <!-- 许可证 -->
 
 ## 许可证
 
 打开 [LICENSE.txt](LICENSE.txt) 查看更多内容。
-
-
 
 
 
@@ -203,18 +212,12 @@
 
 
 
-
-
 <!-- 致谢 -->
 
 ## 致谢
 
-* [othneildrew](https://github.com/othneildrew/Best-README-Template)
-* [Choose an Open Source License](https://choosealicense.com)
-
-  
-
-
+* [othneildrew README Template](https://github.com/othneildrew/Best-README-Template)
+* [ChatGPT](https://chatgpt.com/)
 
 
 

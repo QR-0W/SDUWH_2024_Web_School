@@ -12,7 +12,7 @@
         <div class="common-input">
           <img :src="MailIcon" class="left-icon" />
           <div class="input-view">
-            <input placeholder="请输入用户名" v-model="pageData.loginForm.username" type="text" class="input" />
+            <input placeholder="请输入登录邮箱" v-model="pageData.loginForm.username" type="text" class="input" />
             <p class="err-view"> </p>
           </div>
         </div>
@@ -58,106 +58,116 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useUserStore } from '/@/store';
-  import { message } from 'ant-design-vue';
-  import LogoIcon from '/@/assets/images/logo2.svg';
-  import MailIcon from '/@/assets/images/mail-icon.svg';
-  import PwdIcon from '/@/assets/images/pwd-icon.svg';
+// 导入必要的模块和组件
+import { reactive, ref } from "vue";
+import { useUserStore } from "/@/store";
+import { message } from "ant-design-vue";
+import LogoIcon from "/@/assets/images/logo2.svg";
+import MailIcon from "/@/assets/images/mail-icon.svg";
+import PwdIcon from "/@/assets/images/pwd-icon.svg";
 
-  const router = useRouter();
-  const userStore = useUserStore();
-  const loginMethod = ref('email');
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  const pageData = reactive({
-    loginForm: {
-      username: '',
-      password: '',
-    },
-    mailForm: {
-      usermail: '',
-      captcha: '',
-    },
-  });
+// 定义响应式变量和状态
+const loginMethod = ref('email'); // 登录方式，默认为邮箱登录
 
-  /**
-   * 处理登录逻辑。
-   *------------------------------------
-   * 本函数负责调用userStore中的login方法，传入用户名和密码进行登录操作。
-   * 成功登录后，会执行loginSuccess函数，并打印相关用户信息。
-   * 如果登录失败，会显示错误提示。
-   */
-  const handleLogin = () => {
-    userStore
-      .login({
-        username: pageData.loginForm.username,
-        password: pageData.loginForm.password,
-      })
-      .then((res) => {
-        loginSuccess();
-        console.log('success==>', userStore.user_name);
-        console.log('success==>', userStore.user_id);
-        console.log('success==>', userStore.user_token);
-      })
-      .catch((err) => {
-        message.warn(err.msg || '登录失败');
-      });
-  };
+const pageData = reactive({
+  loginForm: {
+    username: '', // 用户名
+    password: '', // 密码
+  },
+  mailForm: {
+    usermail: '', // 用户邮箱
+    captcha: '',  // 邮箱验证码
+  },
+});
 
-  const handleEmailSend = () => {
-    userStore
-      .sendcaptcha({ usermail: pageData.mailForm.usermail, sendtype: 'login' })
-      .then((res) => {
-        if (res.code == 200) {
-          message.warn(res.msg || '发送成功');
-        }
-      })
-      .catch((err) => {
-        message.warn(err.msg || '发送失败');
-      });
-  };
+/**
+ * 处理登录逻辑。
+ * 本函数负责调用userStore中的login方法，传入用户名和密码进行登录操作。
+ * 成功登录后，会执行loginSuccess函数，并打印相关用户信息。
+ * 如果登录失败，会显示错误提示。
+ */
+const handleLogin = () => {
+  userStore
+    .login({
+      username: pageData.loginForm.username,
+      password: pageData.loginForm.password,
+    })
+    .then((res) => {
+      loginSuccess();
+      console.log('success==>', userStore.user_name);
+      console.log('success==>', userStore.user_id);
+      console.log('success==>', userStore.user_token);
+    })
+    .catch((err) => {
+      message.warn(err.msg || '登录失败');
+    });
 
-  const handleEmailLogin = () => {
-    userStore
-      .verifycaptcha({
-        usermail: pageData.mailForm.usermail,
-        captcha: pageData.mailForm.captcha,
-      })
-      .then((res) => {
-        loginSuccess();
-        console.log('success==>', userStore.user_name);
-        console.log('success==>', userStore.user_id);
-        console.log('success==>', userStore.user_token);
-      })
-      .catch((err) => {
-        message.warn(err.msg || '登录失败');
-      });
-  };
-  /**
-   * 跳转到用户注册页面
-   *
-   * 本函数用于导航到应用程序中的用户注册页面。它不接受任何参数，也不返回任何值。
-   * 调用此函数将导致当前视图切换到注册页面，允许新用户创建他们的账户。
-   */
+};
 
-  const handleCreateUser = () => {
-    router.push({ name: 'register' });
-  };
+/**
+ * 处理发送邮箱验证码的逻辑。
+ * 本函数调用userStore中的sendcaptcha方法，传入用户邮箱，发送登录验证码。
+ * 如果验证码发送成功，会显示成功提示。
+ * 如果发送失败，会显示错误提示。
+ */
+const handleEmailSend = () => {
+  userStore
+    .sendcaptcha({ usermail: pageData.mailForm.usermail, sendtype: 'login' })
+    .then((res) => {
+      if (res.code == 200) {
+        message.warn(res.msg || '发送成功');
+      }
+    })
+    .catch((err) => {
+      message.warn(err.msg || '发送失败');
+    });
+};
 
-  /**
-   * 登录成功后的处理函数。
-   *
-   * 该函数在用户成功登录后被调用，负责将用户重定向到主门户页面，并显示一条成功登录的消息。
-   * 这样做是为了提供给用户明确的反馈，让用户知道登录操作已经成功完成，并且他们可以继续进行后续的操作。
-   *
-   * @returns {void} 该函数没有返回值。
-   */
-  const loginSuccess = () => {
-    router.push({ name: 'portal' });
-    message.success('登录成功！');
-  };
+/**
+ * 处理邮箱验证码登录的逻辑。
+ * 本函数调用userStore中的verifycaptcha方法，传入用户邮箱和验证码进行登录验证。
+ * 成功登录后，会执行loginSuccess函数，并打印相关用户信息。
+ * 如果登录失败，会显示错误提示。
+ */
+const handleEmailLogin = () => {
+  userStore
+    .verifycaptcha({
+      usermail: pageData.mailForm.usermail,
+      captcha: pageData.mailForm.captcha,
+    })
+    .then((res) => {
+      loginSuccess();
+      console.log('success==>', userStore.user_name);
+      console.log('success==>', userStore.user_id);
+      console.log('success==>', userStore.user_token);
+    })
+    .catch((err) => {
+      message.warn(err.msg || '登录失败');
+    });
+};
 
+/**
+ * 跳转到用户注册页面。
+ * 本函数用于导航到应用程序中的用户注册页面，允许新用户创建账户。
+ */
+const handleCreateUser = () => {
+  router.push({ name: 'register' });
+};
+
+/**
+ * 登录成功后的处理函数。
+ * 该函数在用户成功登录后被调用，负责将用户重定向到主门户页面，并显示一条成功登录的消息。
+ */
+const loginSuccess = () => {
+  router.push({ name: 'portal' });
+  message.success('登录成功！');
+};
 </script>
+
 //样式表
 <style scoped lang="less">
   div {

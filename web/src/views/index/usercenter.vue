@@ -15,15 +15,15 @@
   </div>
 </template>
 <script>
-  import Header from '/@/views/index/components/header.vue';
-  import Footer from '/@/views/index/components/footer.vue';
-  import MineInfosView from '/@/views/index/user/mine-infos-view.vue';
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import MineInfosView from "/@/views/index/user/mine-infos-view.vue";
 
-  export default {
+export default {
     components: {
+      Header,
       MineInfosView,
       Footer,
-      Header,
     },
     data() {
       return {
@@ -31,6 +31,7 @@
       };
     },
   };
+
 </script>
 <style scoped lang="less">
   .user {

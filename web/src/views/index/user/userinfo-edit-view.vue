@@ -51,85 +51,107 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
-  import { detailApi, updateUserInfoApi } from '/@/api/user';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
-  import AvatarIcon from '/@/assets/images/avatar.jpg';
+// 导入必要的模块和工具
+import { message } from "ant-design-vue";
+import { detailApi, updateUserInfoApi } from "/@/api/user";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
+import AvatarIcon from "/@/assets/images/avatar.jpg";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  let loading = ref(false);
-  let tData = reactive({
-    form: {
-      avatar: undefined,
-      avatarFile: undefined,
-      nickname: undefined,
-      email: undefined,
-      mobile: undefined,
-      description: undefined,
-    },
-  });
+// 定义响应式变量和状态
+let loading = ref(false); // 加载状态
+let tData = reactive({
+  form: {
+    avatar: undefined, // 头像URL
+    avatarFile: undefined, // 头像文件
+    nickname: undefined, // 昵称
+    email: undefined, // 邮箱
+    mobile: undefined, // 手机号
+    description: undefined, // 描述
+  },
+});
 
-  onMounted(() => {
-    getUserInfo();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getUserInfo(); // 获取用户信息
+});
 
-  const beforeUpload = (file) => {
-    // 改文件名
-    const fileName = new Date().getTime().toString() + '.' + file.type.substring(6);
-    const copyFile = new File([file], fileName);
-    console.log(copyFile);
-    tData.form.avatarFile = copyFile;
-    return false;
-  };
+/**
+ * 文件上传前的处理函数
+ * @param {File} file 上传的文件
+ * @returns {boolean} 返回false以阻止默认上传行为
+ */
+const beforeUpload = (file) => {
+  // 改文件名
+  const fileName = new Date().getTime().toString() + '.' + file.type.substring(6);
+  const copyFile = new File([file], fileName);
+  console.log(copyFile);
+  tData.form.avatarFile = copyFile;
+  return false;
+};
 
-  const getUserInfo = () => {
-    loading.value = true;
-    let userId = userStore.user_id;
-    detailApi({ userId: userId })
-      .then((res) => {
-        tData.form = res.data;
-        if (tData.form.avatar) {
-          tData.form.avatar = BASE_URL + '/api/staticfiles/avatar/' + tData.form.avatar;
-        }
-        loading.value = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        loading.value = false;
-      });
-  };
-  const submit = () => {
-    let formData = new FormData();
-    let userId = userStore.user_id;
-    formData.append('id', userId);
-    if (tData.form.avatarFile) {
-      formData.append('avatarFile', tData.form.avatarFile);
-    }
-    if (tData.form.nickname) {
-      formData.append('nickname', tData.form.nickname);
-    }
-    if (tData.form.email) {
-      formData.append('email', tData.form.email);
-    }
-    if (tData.form.mobile) {
-      formData.append('mobile', tData.form.mobile);
-    }
-    if (tData.form.description) {
-      formData.append('description', tData.form.description);
-    }
-    updateUserInfoApi(formData)
-      .then((res) => {
-        message.success('保存成功');
-        getUserInfo();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+/**
+ * 获取用户信息
+ */
+const getUserInfo = () => {
+  loading.value = true; // 设置加载状态为true
+  let userId = userStore.user_id; // 获取当前用户ID
+  detailApi({ userId: userId })
+    .then((res) => {
+      tData.form = res.data; // 更新表单数据
+      if (tData.form.avatar) {
+        tData.form.avatar = BASE_URL + '/api/staticfiles/avatar/' + tData.form.avatar; // 更新头像URL
+      }
+      loading.value = false; // 设置加载状态为false
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+      loading.value = false; // 设置加载状态为false
+    });
+};
+
+/**
+ * 提交表单数据
+ */
+const submit = () => {
+  let formData = new FormData();
+  let userId = userStore.user_id; // 获取当前用户ID
+  formData.append('id', userId);
+  if (tData.form.avatarFile) {
+    formData.append('avatarFile', tData.form.avatarFile); // 添加头像文件
+  }
+  if (tData.form.nickname) {
+    formData.append('nickname', tData.form.nickname); // 添加昵称
+  }
+  if (tData.form.email) {
+    formData.append('email', tData.form.email); // 添加邮箱
+  }
+  if (tData.form.mobile) {
+    formData.append('mobile', tData.form.mobile); // 添加手机号
+  }
+  if (tData.form.description) {
+    formData.append('description', tData.form.description); // 添加描述
+  }
+  // 更新用户信息
+  updateUserInfoApi(formData)
+    .then((res) => {
+      message.success('保存成功'); // 显示保存成功的消息
+      getUserInfo(); // 更新用户信息
+      setTimeout(() => {
+        window.location.reload(); // 刷新页面
+      }, 500); // 设置延迟时间，单位为毫秒，可以根据需要调整
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+    });
+};
+
 </script>
+
 
 <style scoped lang="less">
   input,

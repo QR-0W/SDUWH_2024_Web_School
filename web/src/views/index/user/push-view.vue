@@ -22,62 +22,77 @@
 </template>
 
 <script setup>
-  import { message } from 'ant-design-vue';
-  import { detailApi, updateUserInfoApi } from '/@/api/user';
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和工具
+import { message } from "ant-design-vue";
+import { detailApi, updateUserInfoApi } from "/@/api/user";
+import { useUserStore } from "/@/store";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  let pushEmail = ref('');
-  let pushSwitch = ref(false);
+// 定义响应式变量
+let pushEmail = ref(''); // 推送邮箱
+let pushSwitch = ref(false); // 推送开关状态
 
-  onMounted(() => {
-    getUserInfo();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getUserInfo(); // 获取用户信息
+});
 
-  const getUserInfo = () => {
-    let userId = userStore.user_id;
+/**
+ * 获取用户信息
+ */
+const getUserInfo = () => {
+  let userId = userStore.user_id; // 获取当前用户ID
 
-    detailApi({ userId: userId })
-      .then((res) => {
-        if (res.data) {
-          pushEmail.value = res.data.pushEmail;
-          if (res.data.pushSwitch === '1') {
-            pushSwitch.value = true;
-          }
+  detailApi({ userId: userId })
+    .then((res) => {
+      if (res.data) {
+        pushEmail.value = res.data.pushEmail; // 更新推送邮箱
+        if (res.data.pushSwitch === '1') {
+          pushSwitch.value = true; // 更新推送开关状态
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+      }
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+    });
+};
 
-  const handleSave = () => {
-    const reg = /^[a-zA-Z0-9][a-zA-Z0-9_]+\@[a-zA-Z0-9]+\.[a-zA-Z]{2,5}(\.[a-zA-Z]{2,5})*$/i;
+/**
+ * 处理保存操作
+ */
+const handleSave = () => {
+  // 邮箱格式校验正则表达式
+  const reg = /^[a-zA-Z0-9][a-zA-Z0-9_]+\@[a-zA-Z0-9]+\.[a-zA-Z]{2,5}(\.[a-zA-Z]{2,5})*$/i;
 
-    if (!pushEmail.value.match(reg)) {
-      message.warn('请输入正确的邮箱格式');
-      return;
-    }
+  // 校验推送邮箱格式
+  if (!pushEmail.value.match(reg)) {
+    message.warn('请输入正确的邮箱格式');
+    return;
+  }
 
-    let userId = userStore.user_id;
-    const formData = new FormData();
-    formData.append('id', userId);
-    if (pushEmail.value) {
-      formData.append('pushEmail', pushEmail.value);
-    }
-    formData.append('pushSwitch', pushSwitch.value ? '1' : '0');
-    updateUserInfoApi(formData)
-      .then((res) => {
-        getUserInfo();
-        message.success('保存成功');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  let userId = userStore.user_id; // 获取当前用户ID
+  const formData = new FormData();
+  formData.append('id', userId);
+  if (pushEmail.value) {
+    formData.append('pushEmail', pushEmail.value); // 添加推送邮箱
+  }
+  formData.append('pushSwitch', pushSwitch.value ? '1' : '0'); // 添加推送开关状态
+
+  // 更新用户信息
+  updateUserInfoApi(formData)
+    .then((res) => {
+      getUserInfo(); // 更新用户信息
+      message.success('保存成功'); // 显示保存成功的消息
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+    });
+};
 </script>
+
 <style scoped lang="less">
   progress {
     vertical-align: baseline;

@@ -24,45 +24,55 @@
 </template>
 
 <script setup>
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和组件
+import { useUserStore } from "/@/store";
+import { listUserCommentsApi } from "/@/api/comment";
+import { BASE_URL } from "/@/store/constants";
+import { getFormatTime } from "/@/utils";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  import { listUserCommentsApi } from '/@/api/comment';
-  import { BASE_URL } from '/@/store/constants';
-  import { getFormatTime } from '/@/utils';
+// 定义响应式变量
+const loading = ref(false); // 加载状态
+const commentData = ref([]); // 评论数据
 
-  const loading = ref(false);
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getCommentList(); // 获取用户评论列表
+});
 
-  const commentData = ref([]);
+/**
+ * 处理点击评论标题的逻辑
+ * @param {Object} record 评论记录
+ */
+const handleClickTitle = (record) => {
+  let text = router.resolve({ name: 'detail', query: { id: record.thingId } });
+  window.open(text.href, '_blank'); // 打开新的浏览器标签页，显示评论对应的详情
+};
 
-  onMounted(() => {
-    getCommentList();
-  });
-
-  const handleClickTitle = (record) => {
-    let text = router.resolve({ name: 'detail', query: { id: record.thingId } });
-    window.open(text.href, '_blank');
-  };
-
-  const getCommentList = () => {
-    loading.value = true;
-    let userId = userStore.user_id;
-    listUserCommentsApi({ userId: userId })
-      .then((res) => {
-        res.data.forEach((item) => {
-          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-        });
-        commentData.value = res.data;
-        loading.value = false;
-      })
-      .catch((err) => {
-        message.error(err.msg || '网络异常');
-        loading.value = false;
+/**
+ * 获取用户评论列表
+ */
+const getCommentList = () => {
+  loading.value = true; // 设置加载状态为true
+  let userId = userStore.user_id; // 获取当前用户ID
+  listUserCommentsApi({ userId: userId })
+    .then((res) => {
+      res.data.forEach((item) => {
+        item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover; // 设置图片的完整URL
       });
-  };
+      commentData.value = res.data; // 更新评论数据
+      loading.value = false; // 设置加载状态为false
+    })
+    .catch((err) => {
+      message.error(err.msg || '网络异常'); // 显示错误消息
+      loading.value = false; // 设置加载状态为false
+    });
+};
 </script>
+
 <style scoped lang="less">
   .flex-view {
     display: -webkit-box;

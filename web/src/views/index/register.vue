@@ -65,71 +65,90 @@
 </template>
 
 <script setup lang="ts">
-  import { userRegisterApi } from '/@/api/user';
-  import { message } from 'ant-design-vue';
-  import MailIcon from '/@/assets/images/mail-icon.svg';
-  import PwdIcon from '/@/assets/images/pwd-icon.svg';
-  import { useUserStore } from '/@/store';
-  import UserIcon from '/@/assets/images/user.svg';
+// 导入必要的模块和组件
+import { userRegisterApi } from "/@/api/user";
+import { message } from "ant-design-vue";
+import MailIcon from "/@/assets/images/mail-icon.svg";
+import PwdIcon from "/@/assets/images/pwd-icon.svg";
+import { useUserStore } from "/@/store";
+import UserIcon from "/@/assets/images/user.svg";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+const router = useRouter(); // 获取路由对象，用于页面跳转
+const userStore = useUserStore(); // 获取用户存储对象，用于管理用户状态
 
-  const tData = reactive({
-    registerForm: {
-      username: '',
-      usermail: '',
-      captcha: '',
-      password: '',
-      repassword: '',
-    },
-  });
+// 定义响应式数据对象，用于存储注册表单信息
+const tData = reactive({
+  registerForm: {
+    username: '', // 用户名
+    usermail: '', // 邮箱
+    captcha: '',  // 验证码
+    password: '', // 密码
+    repassword: '', // 确认密码
+  },
+});
 
-  const handleRegister = async () => {
-    if (
-      tData.registerForm.username === '' ||
-      tData.registerForm.password === '' ||
-      tData.registerForm.repassword === '' ||
-      tData.registerForm.usermail === '' ||
-      tData.registerForm.captcha === ''
-    ) {
-      message.warn('不能为空！');
-      return;
-    } else {
-      userRegister();
-    }
-  };
+/**
+ * 处理注册逻辑。
+ * 检查表单字段是否为空，如果为空则显示警告消息。
+ * 如果所有字段都已填写，则调用userRegister函数执行注册操作。
+ */
+const handleRegister = async () => {
+  if (
+    tData.registerForm.username === '' ||
+    tData.registerForm.password === '' ||
+    tData.registerForm.repassword === '' ||
+    tData.registerForm.usermail === '' ||
+    tData.registerForm.captcha === ''
+  ) {
+    message.warn('不能为空！');
+    return;
+  } else {
+    userRegister();
+  }
+};
 
-  const handleEmailSend = async () => {
-    userStore
-      .sendcaptcha({ usermail: tData.registerForm.usermail, sendtype: 'register' })
-      .then((res) => {
-        if (res.code == 200) {
-          message.warn(res.msg || '发送成功');
-        }
-      })
-      .catch((err) => {
-        message.warn(err.msg || '发送失败');
-      });
-  };
-
-  // 注册
-  const userRegister = () =>
-    userRegisterApi({
-      username: tData.registerForm.username,
-      password: tData.registerForm.password,
-      rePassword: tData.registerForm.repassword,
-      captcha: tData.registerForm.captcha,
-      email: tData.registerForm.usermail,
+/**
+ * 处理发送邮箱验证码的逻辑。
+ * 调用userStore中的sendcaptcha方法，传入用户邮箱，发送注册验证码。
+ * 如果验证码发送成功，则显示成功提示。
+ * 如果发送失败，则显示错误提示。
+ */
+const handleEmailSend = async () => {
+  userStore
+    .sendcaptcha({ usermail: tData.registerForm.usermail, sendtype: 'register' })
+    .then((res) => {
+      if (res.code == 200) {
+        message.warn(res.msg || '发送成功');
+      }
     })
-      .then((res) => {
-        message.success('注册成功！');
-        router.push({ name: 'login' });
-      })
-      .catch((err) => {
-        message.error(err.msg || '注册失败');
-      });
+    .catch((err) => {
+      message.warn(err.msg || '发送失败');
+    });
+};
+
+/**
+ * 注册用户。
+ * 调用userRegisterApi方法，传入注册表单数据进行注册操作。
+ * 如果注册成功，则显示成功消息并跳转到登录页面。
+ * 如果注册失败，则显示错误消息。
+ */
+const userRegister = () =>
+  userRegisterApi({
+    username: tData.registerForm.username,
+    password: tData.registerForm.password,
+    rePassword: tData.registerForm.repassword,
+    captcha: tData.registerForm.captcha,
+    email: tData.registerForm.usermail,
+  })
+    .then((res) => {
+      message.success('注册成功！');
+      router.push({ name: 'login' });
+    })
+    .catch((err) => {
+      message.error(err.msg || '注册失败');
+    });
 </script>
+
 
 <style scoped lang="less">
   div {
@@ -153,7 +172,7 @@
   .container {
     max-width: 100%;
     //background: #142131;
-    background-image: url('../../assets/images/117201993_p1.jpg');
+    background-image: url('../../assets/images/Image_1715812747861.jpg');
     background-size: cover;
     object-fit: cover;
     height: 100vh;

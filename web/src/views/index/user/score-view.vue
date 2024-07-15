@@ -8,31 +8,41 @@
 </template>
 
 <script setup>
-  import { detailApi } from '/@/api/user';
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和工具
+import { detailApi } from "/@/api/user";
+import { useUserStore } from "/@/store";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  let score = ref(0);
+// 定义响应式变量
+let score = ref(0); // 用户积分
 
-  onMounted(() => {
-    getUserInfo();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getUserInfo(); // 获取用户信息
+});
 
-  const getUserInfo = () => {
-    let userId = userStore.user_id;
-    detailApi({ userId: userId })
-      .then((res) => {
-        if (res.data) {
-          score.value = res.data.score;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+/**
+ * 获取用户信息
+ */
+const getUserInfo = () => {
+  let userId = userStore.user_id; // 获取当前用户ID
+
+  detailApi({ userId: userId })
+    .then((res) => {
+      if (res.data) {
+        score.value = res.data.score; // 更新用户积分
+      }
+    })
+    .catch((err) => {
+      console.log(err); // 打印错误信息
+    });
+};
 </script>
+
+
 <style scoped lang="less">
   .flex-view {
     display: flex;

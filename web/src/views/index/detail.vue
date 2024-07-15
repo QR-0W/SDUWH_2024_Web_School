@@ -197,228 +197,261 @@
 </template>
 
 <script setup>
-  // 导入所需模块和组件
-  import { message, Modal } from 'ant-design-vue';
-  import Header from '/@/views/index/components/header.vue';
-  import Footer from '/@/views/index/components/footer.vue';
-  import AddIcon from '/@/assets/images/add.svg';
-  import WantIcon from '/@/assets/images/want-read-hover.svg';
-  import RecommendIcon from '/@/assets/images/recommend-hover.svg';
-  import ShareIcon from '/@/assets/images/share-icon.svg';
-  import WeiboShareIcon from '/@/assets/images/wb-share.svg';
-  import AvatarIcon from '/@/assets/images/avatar.jpg';
-  import { detailApi, listApi as listThingList } from '/@/api/thing';
-  import { listThingCommentsApi, createApi as createCommentApi, likeApi } from '/@/api/comment';
-  import { wishApi } from '/@/api/thingWish';
-  import { collectApi } from '/@/api/thingCollect';
-  import { BASE_URL } from '/@/store/constants';
-  import { useRoute, useRouter } from 'vue-router/dist/vue-router';
-  import { useUserStore } from '/@/store';
-  import { getFormatTime } from '/@/utils';
+// 导入所需模块和组件
+import { message, Modal } from "ant-design-vue";
+import Header from "/@/views/index/components/header.vue";
+import Footer from "/@/views/index/components/footer.vue";
+import AddIcon from "/@/assets/images/add.svg";
+import WantIcon from "/@/assets/images/want-read-hover.svg";
+import RecommendIcon from "/@/assets/images/recommend-hover.svg";
+import ShareIcon from "/@/assets/images/share-icon.svg";
+import WeiboShareIcon from "/@/assets/images/wb-share.svg";
+import AvatarIcon from "/@/assets/images/avatar.jpg";
+import { detailApi, listApi as listThingList } from "/@/api/thing";
+import { createApi as createCommentApi, likeApi, listThingCommentsApi } from "/@/api/comment";
+import { wishApi } from "/@/api/thingWish";
+import { collectApi } from "/@/api/thingCollect";
+import { BASE_URL } from "/@/store/constants";
+import { useRoute, useRouter } from "vue-router/dist/vue-router";
+import { useUserStore } from "/@/store";
+import { getFormatTime } from "/@/utils";
 
-  // 初始化变量和状态
-  const router = useRouter();
-  const route = useRoute();
-  const userStore = useUserStore();
+// 初始化变量和状态
+const router = useRouter(); // 路由对象，用于导航
+const route = useRoute(); // 当前路由信息
+const userStore = useUserStore(); // 用户状态存储
 
-  let thingId = ref('');
-  let detailData = ref({});
-  let tabUnderLeft = ref(6);
-  let tabData = ref(['简介', '评论']);
-  let selectTabIndex = ref(0);
-  let classification_title = ref('');
+// 定义响应式变量
+let thingId = ref(''); // 事物ID
+let detailData = ref({}); // 详情数据
+let tabUnderLeft = ref(6); // 选项卡下划线位置
+let tabData = ref(['简介', '评论']); // 选项卡数据
+let selectTabIndex = ref(0); // 选中的选项卡索引
+let classification_title = ref(''); // 分类标题
 
-  let commentData = ref([]);
-  let recommendData = ref([]);
-  let sortIndex = ref(0);
-  let order = ref('recent'); // 默认排序最新
+let commentData = ref([]); // 评论数据
+let recommendData = ref([]); // 推荐数据
+let sortIndex = ref(0); // 排序索引
+let order = ref('recent'); // 默认排序方式为最新
 
-  let commentRef = ref();
+let commentRef = ref(); // 评论输入框引用
 
-  // 页面加载时获取详情、推荐和评论数据
-  onMounted(() => {
-    thingId.value = route.query.id.trim();
-    getThingDetail();
-    getRecommendThing();
-    getCommentList();
-  });
+// 页面加载时获取详情、推荐和评论数据
+onMounted(() => {
+  thingId.value = route.query.id.trim(); // 获取事物ID
+  getThingDetail(); // 获取事物详情
+  getRecommendThing(); // 获取推荐事物
+  getCommentList(); // 获取评论列表
+});
 
-  // 切换选项卡
-  const selectTab = (index) => {
-    selectTabIndex.value = index;
-    tabUnderLeft.value = 6 + 54 * index;
-  };
+/**
+ * 切换选项卡
+ * @param {number} index 选项卡索引
+ */
+const selectTab = (index) => {
+  selectTabIndex.value = index; // 设置选中的选项卡索引
+  tabUnderLeft.value = 6 + 54 * index; // 更新下划线位置
+};
 
-  // 获取事物详情数据
-  const getThingDetail = () => {
-    detailApi({ id: thingId.value })
+/**
+ * 获取事物详情数据
+ */
+const getThingDetail = () => {
+  detailApi({ id: thingId.value })
+    .then((res) => {
+      detailData.value = res.data;
+      detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
+      if (detailData.classificationId == '1') {
+        classification_title.value = '小学';
+      } else if (detailData.value.classificationId == '2') {
+        classification_title.value = '初中';
+      } else if (detailData.value.classificationId == '3') {
+        classification_title.value = '高中';
+      }
+      console.log(detailData.value.classificationId);
+      console.log(classification_title.value);
+      console.log(detailData.value);
+    })
+    .catch((err) => {
+      message.error('获取详情失败');
+    });
+};
+
+/**
+ * 创建订单
+ */
+const createOrder = () => {
+  // 跳转到支付页面
+  let text = router.resolve({ name: 'pay', query: { id: thingId.value } });
+  window.open(text.href, '_blank');
+};
+
+/**
+ * 加入心愿单
+ */
+const addToWish = () => {
+  let userId = userStore.user_id;
+  if (userId) {
+    wishApi({ thingId: thingId.value, userId: userId })
       .then((res) => {
-        detailData.value = res.data;
-        detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover;
-        if (detailData.classificationId == '1') {
-          classification_title = '小学';
-        } else if (detailData.value.classificationId == '2') {
-          classification_title = '初中';
-        } else if (detailData.value.classificationId == '3') {
-          classification_title = '高中';
+        message.success(res.msg);
+        getThingDetail(); // 更新详情数据
+      })
+      .catch((err) => {
+        console.log('操作失败');
+      });
+  } else {
+    message.warn('请先登录');
+  }
+};
+
+/**
+ * 收藏功能
+ */
+const collect = () => {
+  let userId = userStore.user_id;
+  if (userId) {
+    collectApi({ thingId: thingId.value, userId: userId })
+      .then((res) => {
+        message.success(res.msg);
+        getThingDetail(); // 更新详情数据
+      })
+      .catch((err) => {
+        console.log('收藏失败');
+      });
+  } else {
+    message.warn('请先登录');
+  }
+};
+
+/**
+ * 分享功能
+ */
+const share = () => {
+  let content = '分享一个非常好玩的网站 ' + window.location.href;
+  let shareHref = 'http://service.weibo.com/share/share.php?title=' + content;
+  window.open(shareHref);
+};
+
+/**
+ * 处理立即联系按钮的点击事件
+ * @param {Object} detailData 事物详情数据
+ */
+const handleOrder = (detailData) => {
+  console.log(detailData);
+  const userId = userStore.user_id;
+
+  if (userId) {
+    Modal.info({
+      title: '联系方式',
+      content: '家教联系电话：' + detailData.mobile,
+      onOk() {},
+    });
+  } else {
+    message.warn('请先登录！');
+  }
+};
+
+/**
+ * 获取推荐的家教列表
+ */
+const getRecommendThing = () => {
+  listThingList({ sort: 'recommend' })
+    .then((res) => {
+      res.data.forEach((item, index) => {
+        if (item.cover) {
+          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
         }
-        console.log(detailData.value.classificationId);
-        console.log(classification_title);
-        console.log(detailData);
-      })
-      .catch((err) => {
-        message.error('获取详情失败');
       });
-  };
+      console.log(res);
+      recommendData.value = res.data.slice(0, 4);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-  // 创建订单
-  const createOrder = () => {
-    // 跳转新页面
-    let text = router.resolve({ name: 'pay', query: { id: thingId.value } });
-    window.open(text.href, '_blank');
-  };
+/**
+ * 处理详情页面的点击事件
+ * @param {Object} item 事物项数据
+ */
+const handleDetail = (item) => {
+  // 跳转到详情页面
+  let text = router.resolve({ name: 'detail', query: { id: item.id } });
+  window.open(text.href, '_blank');
+};
 
-  // 加入心愿单
-  const addToWish = () => {
-    let userId = userStore.user_id;
-    if (userId) {
-      wishApi({ thingId: thingId.value, userId: userId })
-        .then((res) => {
-          message.success(res.msg);
-          getThingDetail();
-        })
-        .catch((err) => {
-          console.log('操作失败');
-        });
-    } else {
-      message.warn('请先登录');
-    }
-  };
-
-  // 收藏功能
-  const collect = () => {
-    let userId = userStore.user_id;
-    if (userId) {
-      collectApi({ thingId: thingId.value, userId: userId })
-        .then((res) => {
-          message.success(res.msg);
-          getThingDetail();
-        })
-        .catch((err) => {
-          console.log('收藏失败');
-        });
-    } else {
-      message.warn('请先登录');
-    }
-  };
-
-  // 分享功能
-  const share = () => {
-    let content = '分享一个非常好玩的网站 ' + window.location.href;
-    let shareHref = 'http://service.weibo.com/share/share.php?title=' + content;
-    window.open(shareHref);
-  };
-
-  // 处理立即联系按钮的点击事件
-  const handleOrder = (detailData) => {
-    console.log(detailData);
-    const userId = userStore.user_id;
-
-    if (userId) {
-      Modal.info({
-        title: '联系方式',
-        content: '家教联系电话：' + detailData.mobile,
-        onOk() {},
-      });
-    } else {
-      message.warn('请先登录！');
-    }
-  };
-
-  // 获取推荐的事物列表
-  const getRecommendThing = () => {
-    listThingList({ sort: 'recommend' })
+/**
+ * 发送评论
+ */
+const sendComment = () => {
+  console.log(commentRef.value);
+  let text = commentRef.value.value.trim();
+  console.log(text);
+  if (text.length <= 0) {
+    return;
+  }
+  commentRef.value.value = '';
+  let userId = userStore.user_id;
+  if (userId) {
+    createCommentApi({ content: text, thingId: thingId.value, userId: userId })
       .then((res) => {
-        res.data.forEach((item, index) => {
-          if (item.cover) {
-            item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-          }
-        });
-        console.log(res);
-        recommendData.value = res.data.slice(0, 4);
+        getCommentList(); // 更新评论列表
       })
       .catch((err) => {
         console.log(err);
       });
-  };
+  } else {
+    message.warn('请先登录！');
+    router.push({ name: 'login' });
+  }
+};
 
-  // 处理详情页面的点击事件
-  const handleDetail = (item) => {
-    // 跳转新页面
-    let text = router.resolve({ name: 'detail', query: { id: item.id } });
-    window.open(text.href, '_blank');
-  };
+/**
+ * 点赞评论
+ * @param {string} commentId 评论ID
+ */
+const like = (commentId) => {
+  likeApi({ id: commentId })
+    .then((res) => {
+      getCommentList(); // 更新评论列表
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-  // 发送评论
-  const sendComment = () => {
-    console.log(commentRef.value);
-    let text = commentRef.value.value.trim();
-    console.log(text);
-    if (text.length <= 0) {
-      return;
-    }
-    commentRef.value.value = '';
-    let userId = userStore.user_id;
-    if (userId) {
-      createCommentApi({ content: text, thingId: thingId.value, userId: userId })
-        .then((res) => {
-          getCommentList();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      message.warn('请先登录！');
-      router.push({ name: 'login' });
-    }
-  };
-
-  // 点赞评论
-  const like = (commentId) => {
-    likeApi({ id: commentId })
-      .then((res) => {
-        getCommentList();
-      })
-      .catch((err) => {
-        console.log(err);
+/**
+ * 获取评论列表
+ */
+const getCommentList = () => {
+  listThingCommentsApi({ thingId: thingId.value, order: order.value })
+    .then((res) => {
+      res.data.forEach((item) => {
+        item.commentTime = getFormatTime(item.commentTime, true);
       });
-  };
+      commentData.value = res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-  // 获取评论列表
-  const getCommentList = () => {
-    listThingCommentsApi({ thingId: thingId.value, order: order.value })
-      .then((res) => {
-        res.data.forEach((item) => {
-          item.commentTime = getFormatTime(item.commentTime, true);
-        });
-        commentData.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 切换评论排序方式
-  const sortCommentList = (sortType) => {
-    if (sortType === 'recent') {
-      sortIndex.value = 0;
-    } else {
-      sortIndex.value = 1;
-    }
-    order.value = sortType;
-    getCommentList();
-  };
+/**
+ * 切换评论排序方式
+ * @param {string} sortType 排序类型
+ */
+const sortCommentList = (sortType) => {
+  if (sortType === 'recent') {
+    sortIndex.value = 0;
+  } else {
+    sortIndex.value = 1;
+  }
+  order.value = sortType;
+  getCommentList(); // 更新评论列表
+};
 </script>
+
 <style scoped lang="less">
   .hide {
     display: none;

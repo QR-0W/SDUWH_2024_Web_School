@@ -21,52 +21,69 @@
 </template>
 
 <script setup lang="ts">
-  import { message } from 'ant-design-vue';
-  import { userCollectListApi, unCollectApi } from '/@/api/thingCollect';
-  import { BASE_URL } from '/@/store/constants';
-  import { useUserStore } from '/@/store';
+// 导入必要的模块和组件
+import { message } from "ant-design-vue";
+import { unCollectApi, userCollectListApi } from "/@/api/thingCollect";
+import { BASE_URL } from "/@/store/constants";
+import { useUserStore } from "/@/store";
 
-  const router = useRouter();
-  const userStore = useUserStore();
+// 获取路由和用户状态存储
+const router = useRouter();
+const userStore = useUserStore();
 
-  const pageData = reactive({
-    collectData: [],
-  });
+// 定义响应式数据对象，用于存储收藏列表信息
+const pageData = reactive({
+  collectData: [], // 收藏列表数据
+});
 
-  onMounted(() => {
-    getCollectThingList();
-  });
+// 组件挂载时执行的逻辑
+onMounted(() => {
+  getCollectThingList(); // 获取收藏的事物列表
+});
 
-  const handleClickItem = (record) => {
-    let text = router.resolve({ name: 'detail', query: { id: record.thing_id } });
-    window.open(text.href, '_blank');
-  };
-  const handleRemove = (record) => {
-    let username = userStore.user_name;
-    unCollectApi({ id: record.id })
-      .then((res) => {
-        message.success('移除成功');
-        getCollectThingList();
-      })
-      .catch((err) => {
-        console.log(err);
+/**
+ * 处理点击收藏项的逻辑
+ * @param {Object} record 收藏项记录
+ */
+const handleClickItem = (record) => {
+  let text = router.resolve({ name: 'detail', query: { id: record.thing_id } });
+  window.open(text.href, '_blank'); // 打开新的浏览器标签页，显示收藏项详情
+};
+
+/**
+ * 处理移除收藏项的逻辑
+ * @param {Object} record 收藏项记录
+ */
+const handleRemove = (record) => {
+  unCollectApi({ id: record.id })
+    .then((res) => {
+      message.success('移除成功'); // 显示移除成功的消息
+      getCollectThingList(); // 刷新收藏列表
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+/**
+ * 获取收藏的事物列表
+ */
+const getCollectThingList = () => {
+  let userId = userStore.user_id; // 获取当前用户ID
+  userCollectListApi({ userId: userId })
+    .then((res) => {
+      res.data.forEach((item) => {
+        item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover; // 设置图片的完整URL
       });
-  };
-  const getCollectThingList = () => {
-    let userId = userStore.user_id;
-    userCollectListApi({ userId: userId })
-      .then((res) => {
-        res.data.forEach((item) => {
-          item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover;
-        });
-        console.log(res.data);
-        pageData.collectData = res.data;
-      })
-      .catch((err) => {
-        console.log(err.msg);
-      });
-  };
+      console.log(res.data);
+      pageData.collectData = res.data; // 更新收藏列表数据
+    })
+    .catch((err) => {
+      console.log(err.msg);
+    });
+};
 </script>
+
 <style scoped lang="less">
   .flex-view {
     display: -webkit-box;

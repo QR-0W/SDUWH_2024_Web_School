@@ -1,5 +1,6 @@
 <template>
   <div class="mine-infos-view">
+
     <!-- 个人信息区域 -->
     <div class="info-box flex-view">
       <!-- 用户头像 -->
@@ -66,8 +67,8 @@
         </div>
         <!-- 消息管理 -->
         <div class="mine-item flex-view" @click="clickMenu('messageView')">
-          <img :src="MessageIconImage" alt="消息管理" />
-          <span>消息管理</span>
+          <img :src="MessageIconImage" alt="消息查看" />
+          <span>消息查看</span>
         </div>
       </div>
     </div>
@@ -76,37 +77,47 @@
 </template>
 
 <script lang="ts" setup>
-import AvatarImg from "/@/assets/images/avatar.jpg";
+// 导入必要的图像资源
 import MyOrderImg from "/@/assets/images/order-icon.svg";
 import SettingIconImage from "/@/assets/images/setting-icon.svg";
 import SafeIconImage from "/@/assets/images/setting-safe-icon.svg";
 import PushIconImage from "/@/assets/images/setting-push-icon.svg";
 import MessageIconImage from "/@/assets/images/setting-msg-icon.svg";
 
+// 导入API和状态管理
 import { userCollectListApi } from "/@/api/thingCollect";
 import { userWishListApi } from "/@/api/thingWish";
 import { useUserStore } from "/@/store";
 import { userAvatarApi } from "/@/api/user";
 
+// 获取用户存储和路由对象
 const userStore = useUserStore();
 const router = useRouter();
 
-let collectCount = ref(0);
-let wishCount = ref(0);
-let avatarUrl = ref("");
+// 定义响应式变量
+let collectCount = ref(0); // 收藏数量
+let wishCount = ref(0); // 心愿单数量
+let avatarUrl = ref(""); // 用户头像URL
 
+// 组件挂载时执行的逻辑
 onMounted(() => {
   console.log("正在获取用户ID:", userStore.user_id); // 调试信息
-  getUserAvatar();  // 获取用户信息，包含头像URL
-  getCollectThingList();
-  getWishThingList();
+  getUserAvatar(); // 获取用户头像
+  getCollectThingList(); // 获取收藏的事物列表
+  getWishThingList(); // 获取心愿单列表
 });
 
+/**
+ * 处理菜单点击事件
+ * @param {string} name 路由名称
+ */
 const clickMenu = (name) => {
-  router.push({ name: name });
+  router.push({ name: name }); // 跳转到指定路由
 };
 
-// 获取用户头像
+/**
+ * 获取用户头像
+ */
 const getUserAvatar = async () => {
   let userId = userStore.user_id;
   if (!userId) {
@@ -119,7 +130,7 @@ const getUserAvatar = async () => {
       console.log("头像API返回数据:", res); // 调试信息
       if (res && res.data) {
         // 拼接完整的URL
-        avatarUrl.value = `http://127.0.0.1:9101/api/staticfiles/avatar/${res.data}`;
+        avatarUrl.value = `http://localhost:9101/api/staticfiles/avatar/${res.data}`;
         console.log("成功获取用户头像:", avatarUrl.value); // 调试信息
       } else {
         console.log("未能获取到用户头像数据");
@@ -130,30 +141,35 @@ const getUserAvatar = async () => {
     });
 };
 
-
-
+/**
+ * 获取收藏的事物列表
+ */
 const getCollectThingList = () => {
-  let userId = userStore.user_id;
+  let userId = userStore.user_id; // 获取当前用户ID
   userCollectListApi({ userId: userId })
     .then((res) => {
-      collectCount.value = res.data.length;
+      collectCount.value = res.data.length; // 更新收藏数量
     })
     .catch((err) => {
-      console.log(err.msg);
+      console.log(err.msg); // 打印错误信息
     });
 };
 
+/**
+ * 获取心愿单列表
+ */
 const getWishThingList = () => {
-  let userId = userStore.user_id;
+  let userId = userStore.user_id; // 获取当前用户ID
   userWishListApi({ userId: userId })
     .then((res) => {
-      wishCount.value = res.data.length;
+      wishCount.value = res.data.length; // 更新心愿单数量
     })
     .catch((err) => {
-      console.log(err.msg);
+      console.log(err.msg); // 打印错误信息
     });
 };
 </script>
+
 
 <style lang="less" scoped>
 .flex-view {

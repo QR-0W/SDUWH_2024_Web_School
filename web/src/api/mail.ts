@@ -1,18 +1,18 @@
-import { get, post } from '/@/utils/http/axios';
-import { UserState } from '/@/store/modules/user/types';
+import { post } from "/@/utils/http/axios";
 
 enum URL {
-  send = '/api/mail/send',
-  verify = '/api/mail/verify',
-  registerMail = '/api/mail/sendForRegister',
+  send = "/api/mail/send",
+  verify = "/api/mail/verify",
+  registerMail = "/api/mail/sendForRegister",
 }
+
 interface LoginRes {
   token: string;
 }
 
 export interface mailData {
   usermail: string;
-  sendtype:string;
+  sendtype: string;
 }
 
 export interface captchaVerify {
@@ -21,9 +21,9 @@ export interface captchaVerify {
 }
 
 const sendApi = async (data: mailData) =>
-  post<any>({ url: URL.send, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+  post<any>({ url: URL.send, data, headers: { "Content-Type": "multipart/form-data;charset=utf-8" } });
 
 const verifyApi = async (data: captchaVerify) =>
-  post<any>({ url: URL.verify, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+  post<any>({ url: URL.verify, data, headers: { "Content-Type": "multipart/form-data;charset=utf-8" } });
 
 export { sendApi, verifyApi };
